@@ -1,5 +1,23 @@
 Version: 1.0
 
+Table of Contents
+=================
+
+  - [Introduction](#introduction)
+  - [Conceptual Overview](#conceptual-overview)
+  	- [Entities](#entities)
+  	- [Activities](#activities)
+  	- [Metadata](#metadata)
+  - [Structure](#structure)
+  	- [Tables](#tables)
+  	- [Activity Stream](#activity-stream)
+  	- [Entity Table](#entity-table)
+  	- [Additional Metadata](#additional-metadata)
+  - [Using an Activity Schema](#using-an-activity-schema)
+  	- [Modeling](#modeling)
+  	- [Querying](#querying)
+  - [Known Activity Schema Implementations](#known-activity-schema-implementations)
+
 # Introduction
 
 The activity schema is a new data modeling paradigm designed for modern data warehouses. It was created and implemented by Ahmed Elsamadisi at [Narrator](https://www.narrator.ai).
