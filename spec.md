@@ -42,8 +42,8 @@ At its core an activity schema consists of transforming raw tables into a single
 
 The diagram above is the entire dependency graph: only three layers and a single data model. The modeling layer is able to create any kind of aggregation or table needed, and the consistent table structure allows data analyses to be written once and reused elsewhere. 
 
-<br>
-<br>
+<br/>
+<br/>
 
 
 # Conceptual Overview
@@ -65,8 +65,8 @@ The most common entity is a **customer**, but there can be other types as well. 
 An activity schema table will only have one entity type and is typically named `<entity>_stream`. For example, an activity schema implementation for customers would be  `customer_stream`, and one for bikes would be `bike_stream`
 
  
-<br>
-<br>
+<br/>
+<br/>
 
 ## Activities
 
@@ -75,8 +75,8 @@ Activities are specific actions taken by an entity. For example, if the entity i
 Activities are intended to model real business processes. Taken together, the series of activities for a given entity would represent all relevant interactions that entity has had with a company. 
 
 
-<br>
-<br>
+<br/>
+<br/>
 
 
 ## Metadata
@@ -86,8 +86,8 @@ Every activity has metadata associated with it beyond the customer, the activity
 The stream tables of an activity schema have a finite number of metadata columns that can be associated with each activity. For performance reasons, the most commonly used metadata are stored in the stream table, and in limited cases, an activity schema supports an unlimited number of additional metadata columns stored in a separate table. In practice fewer than 4% of activities need additional columns.  
 
 
-<br>
-<br>
+<br/>
+<br/>
 
 
 # Structure
@@ -95,8 +95,8 @@ The stream tables of an activity schema have a finite number of metadata columns
 The primary benefit of an activity schema is that all data is in a consistent format. This means that it requires tables with specific names, types, and numbers of columns. 
 
 
-<br>
-<br>
+<br/>
+<br/>
 
 ## Tables
 
@@ -116,8 +116,8 @@ The diagram below shows the two types of tables for our example bike stream.
 ![bike_stream](https://user-images.githubusercontent.com/1216989/113031253-791e9c00-915c-11eb-8e84-bc743c8cafb8.png)
 
 
-<br>
-<br>
+<br/>
+<br/>
 
 ## Activity Stream
 
@@ -141,8 +141,8 @@ activity\_repeated\_at|The timestamp of next instance of this activity for this 
 \_activity\_source|The transformation script that created this activity|string
 
 
-<br>
-<br>
+<br/>
+<br/>
 
 ### **Types**
 
@@ -160,8 +160,8 @@ The **revenue_impact** column is a real number (float, decimal, numeric etc). Th
 
 The **activity_occurrence** column is an integer. The integer size doesn't matter — a 4-byte integer is a sensible default.
 
-<br>
-<br>
+<br/>
+<br/>
 
 
 ### **Column Notes**
@@ -198,7 +198,7 @@ The columns **revenue_impact** and **link** are two additional metadata fields t
 
 **link** is used to store a hyperlink relevant to the activity. For example, a 'submitted support ticket' activity could have a link to the actual support ticket in Zendesk. This provides one click access to the source record for the data, which helps immensely when exploring or debugging. 
 
-<br>
+<br/>
 
 
 **Additional Columns**
@@ -212,8 +212,8 @@ Both **activity_occurrence** and **activity_repeated_at are** computed from the 
 The **_activity_source** column is to help the implementation of an activity stream — it's metadata about how the activity stream itself is built, and is not used in querying. It records an identifier to the transformation script that created this activity. It's used by activity schema implementations to support incremental updates of the activity stream (identify all activity rows created by the given transformation, find the maximum timestamp, and insert new rows with a newer timestamp). 
 
 
-<br>
-<br>
+<br/>
+<br/>
 
 ### Performance
 
@@ -222,8 +222,8 @@ The activity stream table is designed for fast queries on common data warehouses
 That said, it's important to pick the correct sort / dist / partition / cluster / index (depending on warehouse technology) to ensure high performance. A detailed discussion is out of scope for this specification, but generally sorting / indexing by (**activity, ts, activity_occurrence**) ****is a good starting point. 
 
 
-<br>
-<br>
+<br/>
+<br/>
 
 ## Entity Table
 
@@ -241,8 +241,8 @@ LEFT JOIN customers
 ```
 
 
-<br>
-<br>
+<br/>
+<br/>
 
 ## Additional Metadata
 
@@ -254,8 +254,8 @@ This all means that activities should only store metadata directly related to th
 
 These additional features aren't needed because they can be 'borrowed' from other activities when querying the activity stream. The result is most (99%) of activities have three or fewer features, and wide tables can be easily generated at query-time by joining in other activities.
 
-<br>
-<br>
+<br/>
+<br/>
 
 ### Borrowing Features
 
@@ -265,8 +265,8 @@ Say we wanted to group all 'submitted_support_ticket' activities by the last pro
 
 This approach is the recommended way to query more metadata than available in a single activity.
 
-<br>
-<br>
+<br/>
+<br/>
 
 
 ### Enrichment Tables
@@ -285,7 +285,7 @@ An enrichment table is typically named after the activity it enriches, taking th
 
 An enrichment table has two required columns - **enriched_activity_id** and **enriched_ts,** which are used to join it into the activity stream. From there it can have any number of additional columns of any type. 
 
-<br>
+<br/>
 
 **Column**|**Description**|**Type**
 -----|-----|-----
@@ -312,9 +312,9 @@ The **enriched_ts** column is usually the same timestamp as the corresponding ac
 It's also useful to have **enriched_ts** if building an enrichment table incrementally - it's an easy way to see the most up-to-date enriched activity timestamp. 
 
 
-<br>
-<br>
-<br>
+<br/>
+<br/>
+<br/>
 
 
 # Using an Activity Schema
@@ -335,8 +335,8 @@ Modeling here is the step to transform source tables in a data warehouse into th
 There is a strong separation between modeling and querying. Any changes to how activities are built has no downstream impact on the queries depending on them. This makes it extremely easy to keep up with changes in production systems. Any type of source data change — from a changed column to swapping out to a completely different system with a new set of tables — simply requires updating the activity, while changing **none** of the downstream queries. This makes each activity the actual source of truth for each concept in the warehouse.
 
 
-<br>
-<br>
+<br/>
+<br/>
 
 ## Modeling
 
@@ -374,8 +374,8 @@ Some activities for the customer could be
 Once the activities have been identified then it's usually fairly straightforward to find which source table(s) will be needed. The only requirement is that we can identify an entity, a relevant activity, and a timestamp. 
 
 
-<br>
-<br>
+<br/>
+<br/>
 
 
 ### SQL Transformations
@@ -422,8 +422,8 @@ In practice nearly all transformation scripts are less than 30 lines and one or 
 
 In addition, there's no reason that transformation scripts and activities have to be 1:1. For example, a 'received_email' activity could be defined from source tables from multiple systems. Or a single transformation can create multiple activities.
 
-<br>
-<br>
+<br/>
+<br/>
 
 ### Building an activity stream
 
@@ -440,8 +440,8 @@ Building an activity schema implementation requires these steps
 - if **source** and **source_id** are used, periodically scan the activity stream and fill in **customer** for the **source** and **source_ids** that have been identified.
 
 
-<br>
-<br>
+<br/>
+<br/>
 
 ## Querying
 
@@ -468,8 +468,8 @@ Lastly, a consistent table structure coupled with easily-modified queries means 
 
 To better explain the concepts above we'll show a few hand-built queries. 
 
-<br>
-<br>
+<br/>
+<br/>
 
 
 ### Basic Queries
@@ -503,8 +503,8 @@ ORDER BY month
 
 Now let's see how this works when relating multiple activities together. 
 
-<br>
-<br>
+<br/>
+<br/>
 
 ### Multiple Activities
 
@@ -536,8 +536,8 @@ This query returns all customers who have at some point subscribed to a yearly p
 
 Now what if we wanted to see how many marketing emails customers received before opening their first email? It's the same query. Simply substitute '**marketing_email_received**' for '**purchased_day_pass**' and '**marketing_email_opened**' for '**subscribed_to_yearly_pass**'
 
-<br>
-<br>
+<br/>
+<br/>
 
 ### Conversion
 
@@ -581,8 +581,8 @@ As with all the other examples the two activities were joined together using tim
 
 This allows very fast ad-hoc querying in practice. Queries can be written once and slightly modified to ask all kinds of new questions without having to figure out how to join new tables to each other.
 
-<br>
-<br>
+<br/>
+<br/>
 
 ### Activity Occurrence and Repeated At
 
@@ -590,8 +590,8 @@ Note the use of **activity_occurrence** and **activity_repeated_at** in the quer
 
 They can be used to easily get the first time each customer did an activity (`activity_occurrence = 1`) and the last time (`activity_repeated_at = null`). Since these two expressions each return only one row per customer, they're also a very efficient way to get every unique customer that has done an activity. 
 
-<br>
-<br>
+<br/>
+<br/>
 
 ### Automatic SQL Generation
 
@@ -603,8 +603,8 @@ And because the activity schema ensures all activities can relate to each other,
 
 Implementations of an activity schema (see below) will often provide a UI for the user to select activities and the relationships between them, and automatically generate and run queries. 
 
-<br>
-<br>
+<br/>
+<br/>
 
 # Known Activity Schema Implementations
 
