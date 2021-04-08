@@ -16,13 +16,14 @@ At its core an activity schema consists of transforming raw tables into a single
 
 **Traditional Data Modeling** - many custom-structured tables
 
-![Activity Schema Spec - Readme Page (1)](https://user-images.githubusercontent.com/1216989/114091781-19746f00-9887-11eb-9cc4-0fd9edc93fa8.png)
+![Activity Schema Spec - Copy of Readme Page (1)](https://user-images.githubusercontent.com/1216989/114094418-48401480-988a-11eb-9b8d-357dcbf62cc4.png)
 
 <br/>
 
 **Activity Schema** - one standard table
 
-![Activity Schema Spec - Readme Page](https://user-images.githubusercontent.com/1216989/114091813-2002e680-9887-11eb-8ced-387b5e5ac991.png)
+![Activity Schema Spec - Copy of Readme Page](https://user-images.githubusercontent.com/1216989/114094439-4ece8c00-988a-11eb-8543-68026dabbee6.png)
+
 
 Business concepts are represented as **entity** doing an **activity** ('a customer completed an order') instead of facts or nouns (orders, products). Activities are built directly from source tables, store only their own data, and are the single source of truth for each concept.
 
