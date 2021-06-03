@@ -1,9 +1,12 @@
-# ActivitySchema
+# [ActivitySchema](https://www.activityschema.com)
+
 The activity schema is a data modeling standard designed for modern data warehouses. It is designed to make data modeling and analysis substantially simpler, faster, and more reliable than existing methodologies (e.g. a [star schema](https://en.wikipedia.org/wiki/Star_schema))
 
 The core approach is to separate **modeling** from **querying**. Models should be fully independent: asking new data questions should not require creating new models. Instead, queries can combine any number of existing models to build anything they need. 
 
 This is done by modeling all data in the warehouse as a **single time series table**.
+
+For more info also see the [home page](https://www.activityschema.com)
 
 <br/>
 <br/>
