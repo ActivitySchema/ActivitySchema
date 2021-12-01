@@ -1,4 +1,4 @@
-Version: 1.0
+#### Version: 1.1
 
 Table of Contents
 =================
@@ -129,8 +129,7 @@ activity\_id|Unique identifier for the activity record|string
 ts|Timestamp in UTC for when the activity occurred|timestamp
 customer|Globally unique identifier for the customer|string
 activity|Name of the activity (ex. 'completed\_order')|string
-source|Name of the source system that generated the anonymous customer id (source\_id) if applicable (ex. 'segment')|string
-source\_id|A unique customer id specific to the source of this activity|string
+anonymous_customer_id |Unique identifier for an anonymous customer (ex. 'segment_abfb8a')|string
 feature\_1|Activity-specific feature 1|string
 feature\_2|Activity-specific feature 2|string
 feature\_3|Activity-specific feature 3|string
@@ -176,15 +175,15 @@ A single entity should have exactly one identifier in the activity stream across
 
 Note that the column name is always **customer** regardless of what kind of entity is modeled in a given activity stream. This is to keep the exact same structure for all activity stream tables. The more specific term 'customer' was chosen over the generic term 'entity', because in the vast majority of the time an entity is some form of customer.  For example, the diagram at the beginning of this section, showing a `bike_stream` table, has a **customer** column to represent bikes.
 
-The customer column can only be null if **source** and **source_id** are both not null. 
+The **customer** column can only be null if **anonymous_customer_id** is not null. 
 
-In some cases the desired customer identifier is not yet available. When that happens the **source** and **source_id** columns are used in its place. They allow the activity stream to store an alternate identifier for an entity — called a local identifier (in contrast to the global identifier in the **customer** column).
+In some cases the desired customer identifier is not yet available. When that happens the **anonymous_customer_id** column is used in its place. It allows the activity stream to store an alternate identifier for an entity — called a local identifier (in contrast to the global identifier in the **customer** column).
 
 For example, say we're tracking customer page views on a web site. Visits are typically anonymous, so trackers like Segment or Google Analytics assign a proprietary id to the site visitor. This allows them to track the same person across sessions, even if we know nothing else about them. 
 
-In this situation, store that anonymous identifier in **source_id.**  Use **source** to identify the type of anonymous identifier used — a good default is the name of the service providing it. For example, 'segment' or 'ga4'. 
+In this situation, store that anonymous identifier in **anonymous_customer_id.**  By convention we prepend the name of the service providing the identify to the identifier in the **anonymous_customer_id** column. For example: 'segment_abd5d3...' or 'ga4_f9b9c...' It's not strictly necessary, but it can help with ensuring uniqueness and quickly identifying the origin of the anonymous ids.
 
-When **customer, source**, and **source_id** are all available it creates an association that can be used for identity resolution: all previous activities with only **source** and **source_id** can now be understood to be from that customer. A common practice is to fill in the **customer** column in older records once that link has been established.
+When **customer** and **anonymous_customer_id** are both available it creates an association that can be used for identity resolution: all previous activities with only **anonymous_customer_id** can now be understood to be from that customer. A common practice is to fill in the **customer** column in older records once that link has been established.
 
 The three metadata columns, **feature_1**, **feature_2**, and **feature_3,** are used to store additional fields per activity.  They can store anything that fits in a string (length 255) and need to be consistent per activity, but can vary across different activities. 
 
@@ -390,8 +389,7 @@ SELECT
 
      , o.processed_at AS ts
 
-     , NULL     AS source
-     , NULL     AS source_id
+     , NULL     AS anonymous_customer_id
      , o.email  AS customer
 
      , 'completed_order' AS activity
@@ -437,7 +435,7 @@ Building an activity schema implementation requires these steps
 
 - periodically run transformation SQL queries and insert the results into the activity stream
 - periodically scan the activity stream and fill in the **activity_occurrence** and **activity_repeated_at** columns
-- if **source** and **source_id** are used, periodically scan the activity stream and fill in **customer** for the **source** and **source_ids** that have been identified.
+- if **anonymous_customer_id** is used, periodically scan the activity stream and fill in **customer** for the **anonymous_customer_id** that has been identified.
 
 
 <br/>
@@ -609,3 +607,13 @@ Implementations of an activity schema (see below) will often provide a UI for th
 # Known Activity Schema Implementations
 
 [Narrator](https://www.narrator.ai) provides an implementation of the activity schema as a service, along with a full data platform to manage and query it.
+
+<br/>
+<br/>
+
+# Appendix: Revision History
+
+**Version**|**Date**|**Notes**
+-----|-----|-----
+1.1|2021-12-01|Replaced `source` and `source_id` with `anonymous_customer_id`
+1.0|2021-04-30|Initial Spec
