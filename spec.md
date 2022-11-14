@@ -563,7 +563,7 @@ FROM (
         ON ( 
             y.customer = e.customer  AND
             y.ts > e.ts  AND
-            y.ts <= NVL(c.activity_repeated_at, CAST('2100-01-01' AS TIMESTAMP)) 
+            y.ts <= NVL(e.activity_repeated_at, CAST('2100-01-01' AS TIMESTAMP)) 
         )
     WHERE (
         e.activity = 'opened_email' AND
