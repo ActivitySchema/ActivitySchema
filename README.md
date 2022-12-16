@@ -1,6 +1,6 @@
 # [ActivitySchema](https://www.activityschema.com)
 
-The activity schema is a data modeling standard designed for modern data warehouses. It is designed to make data modeling and analysis substantially simpler, faster, and more reliable than existing methodologies (e.g. a [star schema](https://en.wikipedia.org/wiki/Star_schema))
+The Activity Schema data model is a standard designed for modern data warehouses. It is designed to make data modeling and analysis substantially simpler, faster, and more reliable than existing methodologies (e.g. a [star schema](https://en.wikipedia.org/wiki/Star_schema))
 
 The core approach is to separate **modeling** from **querying**. Models should be fully independent: asking new data questions should not require creating new models. Instead, queries can combine any number of existing models to build anything they need. 
 
@@ -20,7 +20,8 @@ At its core an activity schema consists of transforming raw tables into a single
 
 ![image](https://user-images.githubusercontent.com/1216989/206596911-e8256196-fe49-4e4d-b341-f9beae2883d0.png)
 
-<br/>
+<br>
+<br>
 
 **Activity Schema** - one standard table
 
@@ -73,7 +74,9 @@ The [activity schema](https://www.activityschema.com) home page has more info on
 
 ## Building an activity schema
 
-The [implementation](implementation.md) page covers how to build an activity schema in production
+The [implementation](implementation.md) page covers how to build an activity schema in production.
+
+A new activity schema [dbt package](https://hub.getdbt.com/narratorai/activity_schema/latest/) has some helpful macros for building activity stream tables. 
 
 <br>
 
