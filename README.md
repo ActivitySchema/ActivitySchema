@@ -1,14 +1,13 @@
 # [ActivitySchema](https://www.activityschema.com)
 
-The activity schema is a data modeling standard designed for modern data warehouses. It is designed to make data modeling and analysis substantially simpler, faster, and more reliable than existing methodologies (e.g. a [star schema](https://en.wikipedia.org/wiki/Star_schema))
+The Activity Schema data model is a standard designed for modern data warehouses. It is designed to make data modeling and analysis substantially simpler, faster, and more reliable than existing methodologies (e.g. a [star schema](https://en.wikipedia.org/wiki/Star_schema))
 
 The core approach is to separate **modeling** from **querying**. Models should be fully independent: asking new data questions should not require creating new models. Instead, queries can combine any number of existing models to build anything they need. 
 
 This is done by modeling all data in the warehouse as a **single time series table**.
 
-For more info also see the [home page](https://www.activityschema.com)
+For more info also see the [home page](https://www.activityschema.com) or read the [spec](2.0.md).
 
-<br/>
 <br/>
 
 # How it Works
@@ -19,18 +18,19 @@ At its core an activity schema consists of transforming raw tables into a single
 
 **Traditional Data Modeling** - many custom-structured tables
 
-![Activity Schema Spec - Copy of Readme Page (1)](https://user-images.githubusercontent.com/1216989/114094418-48401480-988a-11eb-9b8d-357dcbf62cc4.png)
+![image](https://user-images.githubusercontent.com/1216989/206596911-e8256196-fe49-4e4d-b341-f9beae2883d0.png)
 
-<br/>
+<br>
+<br>
 
 **Activity Schema** - one standard table
 
-![Activity Schema Spec - Copy of Readme Page](https://user-images.githubusercontent.com/1216989/114094439-4ece8c00-988a-11eb-8543-68026dabbee6.png)
+![image](https://user-images.githubusercontent.com/1216989/206596986-ed60ff22-3425-42d3-89c6-240c8a7210ec.png)
 
 
 Business concepts are represented as **entity** doing an **activity** ('a customer completed an order') instead of facts or nouns (orders, products). Activities are built directly from source tables, store only their own data, and are the single source of truth for each concept.
 
-All queries run against the single activity stream to assemble tables for analysis, BI, and reporting. Instead of traditional foreign key joins, queries combine activities using relationships in time (e.g. all customers who completed an order and submitted a support ticket before their next order). 
+All queries run against an activity stream table to assemble data for analysis, BI, and reporting. Instead of traditional foreign key joins, queries combine activities using relationships in time (e.g. all customers who *completed an order* and *submitted a support ticket* before their next *completed order*). 
 
 <br/>
 <br/>
@@ -61,11 +61,32 @@ All queries run against the single activity stream to assemble tables for analys
 
 # Spec
 
-Learn more by reading the full activity schema [specification](spec.md).
+Learn more by reading the full activity schema [specification](2.0.md).
 
 <br/>
-<br/>
 
-# Related Projects
 
-[Narrator.ai](https://www.narrator.ai) is a full implementation of the activity schema as a service.
+# Resources
+
+The [activity schema](https://www.activityschema.com) home page has more info on the approach and its benefits
+
+<br>
+
+## Building an activity schema
+
+The [implementation](implementation.md) page covers how to build an activity schema in production.
+
+A new activity schema [dbt package](https://hub.getdbt.com/narratorai/activity_schema/latest/) has some helpful macros for building activity stream tables. 
+
+<br>
+
+
+## Known Implementations
+
+[Narrator](https://www.narratordata.com) provides a full implementation of the activity schema as a service. The Narrator team directly supports the growth of the activity schema, and is always happy to provide suggestions on how to build one yourself. 
+
+<br>
+
+## Community
+
+The dbt [Slack](https://www.getdbt.com/community/join-the-community/) has a `#modeling-activity-schema` channel for discussion about the activity schema. 
