@@ -10,7 +10,7 @@ For more info also see the [home page](https://www.activityschema.com) or read t
 
 <br/>
 
-# How it Works
+## How it Works
 
 At its core an activity schema consists of transforming raw tables into a single, time series table called an **activity stream**. All downstream plots, tables, materialized views, etc used for BI are built directly from that single table, with no other dependencies. 
 
