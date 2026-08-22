@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Page not found — Activity Schema"
+  description="The page could not be found. Return to the Activity Schema guide or read the open specification."
+  path="/404/"
+>
+  <section class="not-found shell">
+    <p class="eyebrow">404 · No activity found</p>
+    <h1>This event is missing from the stream.</h1>
+    <p class="lede">The page may have moved. Start with the guide or go directly to the open specification.</p>
+    <div class="actions">
+      <a class="button button-primary" href="/">Return home <span class="arrow" aria-hidden="true">→</span></a>
+      <a class="button button-secondary" href="https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md">Read the spec</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 72vh;
+    padding-block: clamp(100px, 16vw, 200px);
+  }
+
+  .not-found h1 {
+    max-width: 900px;
+  }
+</style>

@@ -1,0 +1,218 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ActivityStream from "../components/ActivityStream.astro";
+
+const columns = [
+  ["activity_id", "A stable identifier for the event record."],
+  ["ts", "The UTC timestamp when the event happened."],
+  ["customer", "The entity that performed or experienced the activity."],
+  ["activity", "A clear verb phrase such as completed_order."],
+  ["feature_json", "Activity-specific context such as plan, campaign, or product."],
+];
+---
+
+<BaseLayout
+  title="Activities — Activity Schema"
+  description="Learn how Activity Schema models independent business events in a consistent, warehouse-native activity stream."
+  path="/activities/"
+>
+  <header class="page-hero shell">
+    <p class="eyebrow">The modeling unit</p>
+    <h1>Model what the business does.</h1>
+    <p class="lede">An activity is a clear business event: a customer <strong>opened an email</strong>, a company <strong>signed a contract</strong>, or an order <strong>was shipped</strong>.</p>
+  </header>
+
+  <section class="section-tight">
+    <div class="shell example-wrap">
+      <ActivityStream />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell content-grid">
+      <aside>
+        <p class="eyebrow">Core idea</p>
+        <p class="aside-copy">One activity. One definition. One place to inspect and maintain it.</p>
+      </aside>
+      <div class="prose">
+        <h2>Every row tells the same kind of story.</h2>
+        <p>At its simplest, an Activity Schema describes an entity taking an action at a point in time. The fixed structure is what makes the model discoverable: once you understand one activity, you know how to approach all of them.</p>
+        <p>The specification supports one shared stream table—the preferred default—or one table per activity when warehouse performance makes that useful.</p>
+        <div class="column-list">
+          {columns.map(([name, description]) => (
+            <div>
+              <code>{name}</code>
+              <p>{description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-rule">
+    <div class="shell content-grid">
+      <aside>
+        <p class="eyebrow">Good definitions</p>
+        <p class="aside-copy">Prefer stable business language over source-system language.</p>
+      </aside>
+      <div class="prose">
+        <h2>Make the name useful on its own.</h2>
+        <p>A good activity is independently meaningful. It describes something that actually happened, uses a past-tense verb, and does not hide a chain of unrelated logic.</p>
+        <div class="do-dont grid-2">
+          <article class="card good">
+            <span class="flag">Clear activities</span>
+            <code>started_subscription</code>
+            <code>opened_support_ticket</code>
+            <code>received_shipment</code>
+          </article>
+          <article class="card weak">
+            <span class="flag">Harder to reuse</span>
+            <code>customer_status_table</code>
+            <code>marketing_funnel_v4</code>
+            <code>final_orders_report</code>
+          </article>
+        </div>
+        <p>The second group names artifacts rather than business events. Those artifacts tend to encode one audience or question; activities stay useful as questions change.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section code-section">
+    <div class="shell content-grid">
+      <aside>
+        <p class="eyebrow">Build one</p>
+        <p class="aside-copy">Transform the source directly into the standard shape.</p>
+      </aside>
+      <div class="prose">
+        <h2>Keep the transformation close to its source.</h2>
+        <p>This simplified example defines one activity. Real implementations should also follow the identifier, feature, and incremental-processing guidance in the specification.</p>
+        <pre aria-label="SQL example creating a completed order activity"><code><span class="keyword">select</span>
+  cast(order_id <span class="keyword">as</span> varchar) <span class="keyword">as</span> activity_id,
+  completed_at                   <span class="keyword">as</span> ts,
+  cast(customer_id <span class="keyword">as</span> varchar) <span class="keyword">as</span> customer,
+  <span class="string">'completed_order'</span>               <span class="keyword">as</span> activity,
+  json_object(
+    <span class="string">'plan'</span>, plan_name,
+    <span class="string">'channel'</span>, acquisition_channel
+  )                              <span class="keyword">as</span> feature_json,
+  order_total                    <span class="keyword">as</span> revenue_impact
+<span class="keyword">from</span> source.orders
+<span class="keyword">where</span> completed_at <span class="keyword">is not null</span>;</code></pre>
+        <div class="actions">
+          <a class="button button-primary" href="https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#activity-stream">Read the required columns <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="button button-secondary" href="/temporal-joins/">Next: combine activities</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .example-wrap {
+    max-width: 920px;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 760px);
+    justify-content: space-between;
+    gap: 72px;
+  }
+
+  .aside-copy {
+    max-width: 220px;
+    color: var(--steel);
+    font-size: 0.9rem;
+  }
+
+  .column-list {
+    margin-block: 40px;
+    border-top: 1px solid var(--line);
+  }
+
+  .column-list > div {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 24px;
+    padding-block: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .column-list p {
+    margin: 0;
+    font-size: 0.92rem;
+  }
+
+  .do-dont {
+    margin-block: 36px;
+  }
+
+  .do-dont article {
+    display: grid;
+    gap: 12px;
+    padding: 22px;
+  }
+
+  .do-dont .good {
+    border-top: 3px solid var(--seafoam);
+  }
+
+  .do-dont .weak {
+    border-top: 3px solid var(--fog);
+  }
+
+  .flag {
+    margin-bottom: 10px;
+    color: var(--steel);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  pre {
+    overflow-x: auto;
+    margin-block: 36px;
+    padding: 28px;
+    border-radius: var(--radius);
+    background: var(--midnight);
+    box-shadow: var(--shadow-card);
+    color: #d9dee2;
+    font-size: 0.78rem;
+    line-height: 1.7;
+  }
+
+  pre code {
+    color: inherit;
+  }
+
+  .keyword {
+    color: var(--seafoam);
+  }
+
+  .string {
+    color: var(--seafoam-light);
+  }
+
+  .code-section {
+    background: var(--white);
+  }
+
+  @media (max-width: 820px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .aside-copy {
+      max-width: 520px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .column-list > div {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+</style>

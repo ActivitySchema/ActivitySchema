@@ -1,0 +1,156 @@
+---
+const rows = [
+  { time: "09:04", customer: "cus_102", activity: "started_session", feature: "source: organic" },
+  { time: "09:11", customer: "cus_102", activity: "viewed_pricing", feature: "plan: growth" },
+  { time: "09:18", customer: "cus_381", activity: "opened_email", feature: "campaign: welcome" },
+  { time: "09:26", customer: "cus_102", activity: "started_trial", feature: "plan: growth" },
+  { time: "09:41", customer: "cus_381", activity: "completed_order", feature: "revenue: 240" },
+];
+---
+
+<div class="stream-card" aria-label="Example activity stream table">
+  <div class="card-toolbar">
+    <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    <span class="mono">customer_stream</span>
+    <span class="status"><i></i> live model</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">ts</th>
+          <th scope="col">customer</th>
+          <th scope="col">activity</th>
+          <th scope="col">feature_json</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row) => (
+          <tr>
+            <td>{row.time}</td>
+            <td>{row.customer}</td>
+            <td><span class="activity-cell">{row.activity}</span></td>
+            <td>{`{ ${row.feature} }`}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <div class="stream-footer">
+    <span>One predictable shape</span>
+    <span>Every business event</span>
+  </div>
+</div>
+
+<style>
+  .stream-card {
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: var(--shadow-float);
+  }
+
+  .card-toolbar {
+    display: grid;
+    min-height: 48px;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    padding-inline: 16px;
+    border-bottom: 1px solid var(--line);
+    color: var(--steel);
+    font-size: 0.7rem;
+  }
+
+  .window-dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .window-dots span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+
+  .window-dots span:first-child {
+    background: var(--peach);
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    justify-self: end;
+    gap: 6px;
+    color: var(--seafoam-dark);
+  }
+
+  .status i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--seafoam);
+    box-shadow: 0 0 0 4px rgba(68, 180, 139, 0.12);
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    font-size: 0.72rem;
+    text-align: left;
+  }
+
+  th,
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #eff0f2;
+    white-space: nowrap;
+  }
+
+  th {
+    color: var(--fog);
+    font-size: 0.64rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  td {
+    color: var(--slate);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .activity-cell {
+    color: var(--seafoam-dark);
+  }
+
+  .stream-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-top: 1px solid var(--line);
+    background: #fafafa;
+    color: var(--steel);
+    font-size: 0.72rem;
+  }
+
+  @media (max-width: 620px) {
+    .card-toolbar {
+      grid-template-columns: 1fr auto;
+    }
+
+    .window-dots {
+      display: none;
+    }
+  }
+</style>

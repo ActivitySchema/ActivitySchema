@@ -1,0 +1,328 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import QueryWorkbench from "../components/QueryWorkbench.astro";
+
+const loop = [
+  ["Discover", "Find the activities and features that express the business concepts in the question."],
+  ["Plan", "Choose a cohort activity, append activities, temporal relationships, filters, and measures."],
+  ["Execute", "Generate warehouse-specific SQL, run it with the user's permissions, and inspect intermediate results."],
+  ["Validate", "Check the result against definitions, source logic, data quality, and a human-readable explanation."],
+];
+
+const boundaries = [
+  ["Permissions", "The agent must inherit and enforce warehouse access—not bypass it."],
+  ["Identity", "Customer and anonymous identifiers still need a deliberate resolution strategy."],
+  ["Data quality", "A standard shape cannot make a late, duplicated, or incorrectly defined event trustworthy."],
+  ["Business context", "Metric choices, policy, launches, incidents, and exceptions often live outside the warehouse."],
+  ["Validation", "Generated queries and conclusions need tests, inspectable evidence, and accountable review."],
+  ["Memory", "Corrections and non-obvious caveats should be retained instead of rediscovered on every run."],
+];
+---
+
+<BaseLayout
+  title="Activity Schema for AI"
+  description="A practical guide to using Activity Schema as a human-readable, warehouse-native semantic foundation for AI data agents."
+  path="/ai/"
+>
+  <header class="page-hero shell">
+    <p class="eyebrow">Activity Schema for AI</p>
+    <h1>A common language for people, data, and agents.</h1>
+    <p class="lede">AI can write SQL. The harder problem is knowing <strong>which business concept to use, how it was defined, and how events relate</strong>. Activity Schema makes that reasoning surface smaller, more consistent, and easier to inspect.</p>
+  </header>
+
+  <section class="section-tight">
+    <div class="shell">
+      <QueryWorkbench />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">Why the structure matters</p>
+        <h2>AI needs semantics, not just schema access.</h2>
+      </div>
+      <div class="prose">
+        <p>Pointing an agent at thousands of warehouse tables gives it access, but not necessarily understanding. Similar tables can encode different grains, filters, time windows, and business assumptions.</p>
+        <p>Activity Schema does not ask the model to infer a different warehouse graph for every company. It presents independent, named activities in a fixed shape and a compact vocabulary for relating them through time.</p>
+      </div>
+    </div>
+    <div class="shell contract-card card">
+      <div class="contract-column">
+        <span class="contract-label">Human question</span>
+        <p>Which onboarding actions are common among customers who renew?</p>
+      </div>
+      <span class="contract-arrow" aria-hidden="true">→</span>
+      <div class="contract-column technical">
+        <span class="contract-label">Semantic plan</span>
+        <code>cohort: renewed_subscription</code>
+        <code>append: product_activity</code>
+        <code>relationship: aggregate in before</code>
+      </div>
+      <span class="contract-arrow" aria-hidden="true">→</span>
+      <div class="contract-column">
+        <span class="contract-label">Inspectable answer</span>
+        <p>Results, query, assumptions, and the activity definitions used.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section loop-section">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">A dependable agent loop</p>
+        <h2>Use the model as a contract, not a shortcut.</h2>
+      </div>
+      <div class="prose">
+        <p>The strongest pattern is iterative. The agent plans in business language, executes against live data, checks intermediate results, and exposes enough evidence for a person to verify the answer.</p>
+      </div>
+    </div>
+    <div class="shell loop-grid">
+      {loop.map(([title, description], index) => (
+        <article>
+          <span class="loop-number mono">0{index + 1}</span>
+          <div>
+            <h3>{title}</h3>
+            <p>{description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section context-section">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">Be precise about the promise</p>
+        <h2>Activity Schema is the data-modeling foundation—not the whole AI system.</h2>
+        <p class="context-intro">A useful data agent needs more than a good modeled layer. These concerns should remain explicit in any implementation.</p>
+      </div>
+      <div class="boundary-grid grid-2">
+        {boundaries.map(([title, description]) => (
+          <article class="card">
+            <h3>{title}</h3>
+            <p>{description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section reference-section">
+    <div class="shell reference-card">
+      <div>
+        <p class="eyebrow">Further reading</p>
+        <h2>Context makes the agent useful.</h2>
+        <p>OpenAI's in-house data agent describes a broader context system spanning metadata and lineage, human annotations, code definitions, institutional knowledge, memory, live warehouse inspection, permissions, and evaluation. Activity Schema can make the modeled-data portion more consistent while those other layers remain essential.</p>
+      </div>
+      <a class="button button-secondary" href="https://openai.com/index/inside-our-in-house-data-agent/">Read the case study <span class="arrow" aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+
+  <section class="section next-section">
+    <div class="shell next-grid">
+      <div>
+        <p class="eyebrow">Start small</p>
+        <h2>One entity. Five activities. Ten real questions.</h2>
+      </div>
+      <div class="prose">
+        <p>Choose one meaningful business process. Define the few events that describe it, connect them with temporal relationships, and test the model against questions people already ask. Add activities when a real question exposes a genuine gap.</p>
+        <div class="actions">
+          <a class="button button-primary" href="/activities/">Design the activities <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="button button-secondary" href="https://github.com/ActivitySchema/ActivitySchema/blob/main/implementation.md">Implementation guide</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .split,
+  .next-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(48px, 8vw, 100px);
+  }
+
+  .contract-card {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center;
+    gap: 22px;
+    margin-top: 72px;
+    padding: 28px;
+  }
+
+  .contract-column {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    min-height: 160px;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .contract-column.technical {
+    border-color: rgba(68, 180, 139, 0.48);
+    background: rgba(68, 180, 139, 0.06);
+  }
+
+  .contract-column p {
+    margin: 12px 0 0;
+    color: var(--navy);
+    font-size: 1.05rem;
+    line-height: 1.35;
+  }
+
+  .contract-column code {
+    font-size: 0.7rem;
+  }
+
+  .contract-label {
+    margin-bottom: 12px;
+    color: var(--steel);
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .contract-arrow {
+    color: var(--fog);
+  }
+
+  .loop-section,
+  .reference-section {
+    background: var(--white);
+  }
+
+  .loop-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 72px;
+    border-block: 1px solid var(--line);
+  }
+
+  .loop-grid article {
+    min-height: 300px;
+    padding: 24px;
+    border-right: 1px solid var(--line);
+  }
+
+  .loop-grid article:last-child {
+    border-right: 0;
+  }
+
+  .loop-number {
+    display: block;
+    margin-bottom: 100px;
+    color: var(--seafoam-dark);
+    font-size: 0.68rem;
+  }
+
+  .loop-grid p {
+    margin: 0;
+    color: var(--steel);
+    font-size: 0.88rem;
+  }
+
+  .context-section .split {
+    grid-template-columns: 0.72fr 1.28fr;
+  }
+
+  .context-intro {
+    max-width: 520px;
+    font-size: 1.05rem;
+  }
+
+  .boundary-grid article {
+    min-height: 170px;
+    padding: 22px;
+  }
+
+  .boundary-grid p {
+    margin: 0;
+    color: var(--steel);
+    font-size: 0.86rem;
+  }
+
+  .reference-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 64px;
+    padding: clamp(32px, 6vw, 64px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .reference-card p {
+    max-width: 790px;
+    margin-bottom: 0;
+  }
+
+  .next-section {
+    background: var(--midnight);
+  }
+
+  .next-section h2,
+  .next-section .eyebrow {
+    color: var(--white);
+  }
+
+  .next-section .prose p {
+    color: rgba(255, 255, 255, 0.66);
+  }
+
+  .next-section .button-secondary {
+    border-color: rgba(255, 255, 255, 0.55);
+    color: var(--white);
+  }
+
+  @media (max-width: 960px) {
+    .split,
+    .next-grid,
+    .context-section .split,
+    .reference-card {
+      grid-template-columns: 1fr;
+    }
+
+    .contract-card {
+      grid-template-columns: 1fr;
+    }
+
+    .contract-arrow {
+      justify-self: center;
+      transform: rotate(90deg);
+    }
+
+    .loop-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .loop-grid article:nth-child(2) {
+      border-right: 0;
+    }
+
+    .loop-grid article:nth-child(-n + 2) {
+      border-bottom: 1px solid var(--line);
+    }
+  }
+
+  @media (max-width: 580px) {
+    .loop-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .loop-grid article,
+    .loop-grid article:nth-child(2) {
+      min-height: auto;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .loop-number {
+      margin-bottom: 52px;
+    }
+  }
+</style>

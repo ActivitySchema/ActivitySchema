@@ -1,4 +1,26 @@
-# [ActivitySchema](https://www.activityschema.com)
+# [Activity Schema](https://www.activityschema.com)
+
+Activity Schema is an open, warehouse-native standard for modeling an entity doing activities over time. This repository contains the canonical specification, implementation guidance, and the Astro website published at [activityschema.com](https://www.activityschema.com).
+
+## Website development
+
+The site is a static Astro project and is deployed to GitHub Pages from `main`.
+
+```bash
+npm install
+npm run dev
+```
+
+Before opening a pull request, run:
+
+```bash
+npm run check
+npm run build
+```
+
+The long-form standard remains in [`2.0.md`](2.0.md). The website is a concise guide to the model, temporal joins, and why a consistent activity layer is useful context for AI systems.
+
+## About the standard
 
 The Activity Schema data model is a standard designed for modern data warehouses. It is designed to make data modeling and analysis substantially simpler, faster, and more reliable than existing methodologies (e.g. a [star schema](https://en.wikipedia.org/wiki/Star_schema))
 
@@ -89,4 +111,4 @@ A new activity schema [dbt package](https://hub.getdbt.com/narratorai/activity_s
 
 ## Community
 
-The dbt [Slack](https://www.getdbt.com/community/join-the-community/) has a `#modeling-activity-schema` channel for discussion about the activity schema. 
+The dbt [Slack](https://www.getdbt.com/community/join-the-community/) has a `#modeling-activity-schema` channel for discussion about the activity schema.

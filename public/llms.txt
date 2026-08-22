@@ -1,0 +1,24 @@
+# Activity Schema
+
+> Activity Schema is an open, warehouse-native standard for modeling an entity doing activities over time. It separates independent business definitions from query-time relationships.
+
+## Core ideas
+
+- Model each business concept once as an activity, such as `completed_order` or `opened_email`.
+- Store activities in a consistent activity stream with an identifier, timestamp, entity/customer, activity name, and features.
+- Combine activities at query time with temporal relationships such as first before, last before, first after, or aggregate in between.
+- Keep the modeling layer independent: a new question should usually combine existing activities rather than require a new chain of models.
+
+## Why it is useful for AI
+
+The standard gives an AI system a compact, consistent vocabulary for discovering business events and assembling analyses. Stable activity names, a predictable table shape, explicit temporal relationships, and direct lineage to each activity definition reduce the amount of warehouse-specific structure an agent must infer. The Activity Schema does not replace permissions, governance, identity resolution, data-quality checks, or human validation.
+
+## Canonical resources
+
+- Website: https://www.activityschema.com/
+- Activity guide: https://www.activityschema.com/activities/
+- Temporal joins guide: https://www.activityschema.com/temporal-joins/
+- AI guide: https://www.activityschema.com/ai/
+- Specification 2.0: https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md
+- Implementation guide: https://github.com/ActivitySchema/ActivitySchema/blob/main/implementation.md
+- Source repository: https://github.com/ActivitySchema/ActivitySchema

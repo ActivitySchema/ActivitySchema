@@ -1,0 +1,162 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Mission — Activity Schema"
+  description="Why Activity Schema exists: to make business data easier to model, understand, query, maintain, and reuse."
+  path="/mission/"
+>
+  <header class="page-hero shell">
+    <p class="eyebrow">The mission</p>
+    <h1>Stop rebuilding meaning for every question.</h1>
+    <p class="lede">The Activity Schema began with a practical frustration: data teams repeatedly reconstructed the same business concepts in new tables, queries, and reports.</p>
+  </header>
+
+  <section class="section story-section">
+    <div class="shell story-grid">
+      <div class="story-label mono">Founder note</div>
+      <div class="founder-note">
+        <p>After years in data, Ahmed Elsamadisi saw the same pattern: every question started from scratch. Teams repeatedly decided what to build, which columns to add, and how a new table might be used. Activity Schema began as a search for a standard that could work across companies, answer changing questions, and handle the reality of messy data.</p>
+        <span>Ahmed Elsamadisi, creator of Activity Schema</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell mission-grid">
+      <article>
+        <span class="mono">01</span>
+        <h2>Make business meaning legible.</h2>
+        <p>People should be able to find and understand modeled concepts without reverse-engineering a warehouse dependency graph.</p>
+      </article>
+      <article>
+        <span class="mono">02</span>
+        <h2>Separate definitions from questions.</h2>
+        <p>A new analysis should combine stable activities at query time—not require a new tower of intermediate models.</p>
+      </article>
+      <article>
+        <span class="mono">03</span>
+        <h2>Make useful work reusable.</h2>
+        <p>A common structure makes query patterns, implementation techniques, and analytical methods portable across teams and companies.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section open-section">
+    <div class="shell open-grid">
+      <div>
+        <p class="eyebrow">An open standard</p>
+        <h2>Designed to be discussed, implemented, and improved in public.</h2>
+      </div>
+      <div class="prose">
+        <p>Activity Schema 2.0 is published under the Apache 2.0 license. The repository contains the canonical specification, revision history, and implementation guidance.</p>
+        <p>The standard is intentionally independent of any one warehouse, BI tool, or AI model.</p>
+        <div class="actions">
+          <a class="button button-primary" href="https://github.com/ActivitySchema/ActivitySchema">Contribute on GitHub <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="button button-secondary" href="https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md">Read specification 2.0</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .story-section {
+    background: var(--white);
+  }
+
+  .story-grid {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 860px);
+    gap: 32px;
+  }
+
+  .story-label {
+    color: var(--orange);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .founder-note p {
+    margin: 0;
+    color: var(--navy);
+    font-size: clamp(1.75rem, 4vw, 3.35rem);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.04em;
+  }
+
+  .founder-note span {
+    display: block;
+    margin-top: 36px;
+    color: var(--steel);
+    font-size: 0.84rem;
+  }
+
+  .mission-grid {
+    display: grid;
+    gap: 1px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    grid-template-columns: repeat(3, 1fr);
+    overflow: hidden;
+    background: var(--line);
+  }
+
+  .mission-grid article {
+    min-height: 420px;
+    padding: 28px;
+    background: var(--canvas);
+  }
+
+  .mission-grid span {
+    display: block;
+    margin-bottom: 130px;
+    color: var(--seafoam-dark);
+    font-size: 0.7rem;
+  }
+
+  .mission-grid h2 {
+    font-size: clamp(2rem, 3vw, 3rem);
+  }
+
+  .mission-grid p {
+    margin: 0;
+    color: var(--steel);
+  }
+
+  .open-section {
+    background: var(--white);
+  }
+
+  .open-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 72px;
+  }
+
+  @media (max-width: 820px) {
+    .story-grid,
+    .open-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .story-label {
+      margin-bottom: 12px;
+    }
+
+    .mission-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .mission-grid article {
+      min-height: 320px;
+    }
+
+    .mission-grid span {
+      margin-bottom: 72px;
+    }
+  }
+</style>

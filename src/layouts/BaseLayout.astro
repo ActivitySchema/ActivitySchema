@@ -1,0 +1,259 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+}
+
+const {
+  title,
+  description,
+  path = Astro.url.pathname,
+} = Astro.props;
+
+const canonical = new URL(path, Astro.site);
+const nav = [
+  { href: "/activities/", label: "Activities" },
+  { href: "/temporal-joins/", label: "Temporal joins" },
+  { href: "/ai/", label: "For AI" },
+  { href: "/mission/", label: "Mission" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#111a4a" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Activity Schema" />
+    <meta name="twitter:card" content="summary" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/" aria-label="Activity Schema home">
+          <svg viewBox="0 0 34 34" aria-hidden="true">
+            <rect width="34" height="34" rx="7" fill="#111a4a"></rect>
+            <path d="M9 25 15.4 9h3.3L25 25h-4.1l-1.3-3.8h-5.4L12.8 25H9Zm6.2-7h3.2l-1.6-4.7-1.6 4.7Z" fill="#fff"></path>
+            <circle cx="26" cy="8" r="3" fill="#ec652b"></circle>
+          </svg>
+          <span>Activity Schema</span>
+        </a>
+        <nav aria-label="Primary navigation">
+          {
+            nav.map((item) => (
+              <a href={item.href} aria-current={path.startsWith(item.href) ? "page" : undefined}>
+                {item.label}
+              </a>
+            ))
+          }
+          <a class="nav-spec" href="https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md">
+            Read the spec <span aria-hidden="true">↗</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <a class="brand footer-brand" href="/">Activity Schema</a>
+          <p>An open standard for modeling business activity over time.</p>
+        </div>
+        <div>
+          <p class="footer-label">Learn</p>
+          <a href="/activities/">Activities</a>
+          <a href="/temporal-joins/">Temporal joins</a>
+          <a href="/ai/">Activity Schema for AI</a>
+        </div>
+        <div>
+          <p class="footer-label">Build</p>
+          <a href="https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md">Specification 2.0</a>
+          <a href="https://github.com/ActivitySchema/ActivitySchema/blob/main/implementation.md">Implementation guide</a>
+          <a href="https://github.com/ActivitySchema/ActivitySchema">GitHub repository</a>
+        </div>
+      </div>
+      <div class="shell footer-bottom">
+        <span>Apache 2.0 licensed</span>
+        <span>Created by Ahmed Elsamadisi</span>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .site-header {
+    position: sticky;
+    z-index: 20;
+    top: 0;
+    border-bottom: 1px solid rgba(227, 228, 232, 0.82);
+    background: rgba(246, 246, 248, 0.82);
+    backdrop-filter: blur(18px);
+  }
+
+  .nav-shell {
+    display: flex;
+    min-height: 72px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .brand {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 11px;
+    color: var(--navy);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+
+  .brand svg {
+    width: 34px;
+    height: 34px;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  nav a {
+    padding: 9px 11px;
+    border-radius: var(--radius);
+    color: var(--slate);
+    font-size: 0.875rem;
+    text-decoration: none;
+  }
+
+  nav a:hover,
+  nav a[aria-current="page"] {
+    background: rgba(255, 255, 255, 0.66);
+    color: var(--navy);
+  }
+
+  nav .nav-spec {
+    margin-left: 8px;
+    padding-inline: 15px;
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  nav .nav-spec:hover {
+    background: var(--midnight);
+    color: var(--white);
+  }
+
+  .site-footer {
+    padding-block: 72px 28px;
+    background: var(--midnight);
+    color: var(--white);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: minmax(280px, 2fr) 1fr 1fr;
+    gap: 56px;
+  }
+
+  .site-footer p,
+  .site-footer a {
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .site-footer a {
+    display: block;
+    width: fit-content;
+    margin-bottom: 12px;
+    font-size: 0.92rem;
+    text-decoration: none;
+  }
+
+  .site-footer a:hover {
+    color: var(--white);
+  }
+
+  .site-footer .footer-brand {
+    margin-bottom: 18px;
+    color: var(--white);
+    font-size: 1.15rem;
+  }
+
+  .site-footer .footer-label {
+    margin-bottom: 18px;
+    color: var(--white);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 64px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 900px) {
+    .nav-shell {
+      min-height: auto;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+      padding-block: 14px;
+    }
+
+    nav {
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    nav a {
+      white-space: nowrap;
+    }
+
+    nav .nav-spec {
+      margin-left: 4px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    nav .nav-spec {
+      display: none;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .footer-bottom {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+</style>

@@ -1,0 +1,331 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const relationships = [
+  ["First before", "The earliest related activity before the cohort event."],
+  ["Last before", "The most recent related activity before the cohort event."],
+  ["First after", "The next related activity after the cohort event."],
+  ["Last after", "The latest related activity after the cohort event."],
+  ["First in between", "The first related activity before the cohort activity repeats."],
+  ["Aggregate in before", "A count, sum, min, or max across related activities before the cohort."],
+];
+---
+
+<BaseLayout
+  title="Temporal joins — Activity Schema"
+  description="Learn how Activity Schema combines independent business events using customer and time instead of pre-modeled foreign-key relationships."
+  path="/temporal-joins/"
+>
+  <header class="page-hero shell">
+    <p class="eyebrow">The querying unit</p>
+    <h1>Relate activities through time.</h1>
+    <p class="lede">Temporal joins combine independent activities using an entity and timestamp. They let you describe the relationship you mean—<strong>last before</strong>, <strong>first after</strong>, or <strong>in between</strong>—at query time.</p>
+  </header>
+
+  <section class="section-tight timeline-section">
+    <div class="shell">
+      <div class="timeline-card card">
+        <div class="question">
+          <span class="mono">Question</span>
+          <p>Which email did a customer open before completing an order?</p>
+        </div>
+        <div class="timeline" role="img" aria-label="A timeline showing opened email as the last activity before completed order">
+          <div class="axis" aria-hidden="true"></div>
+          <div class="event muted first-event">
+            <span class="dot"></span>
+            <code>started_session</code>
+            <small>08:42</small>
+          </div>
+          <div class="event selected second-event">
+            <span class="dot"></span>
+            <code>opened_email</code>
+            <small>09:04</small>
+            <b>last before</b>
+          </div>
+          <div class="event cohort third-event">
+            <span class="dot"></span>
+            <code>completed_order</code>
+            <small>09:41</small>
+            <b>cohort</b>
+          </div>
+          <div class="event muted fourth-event">
+            <span class="dot"></span>
+            <code>opened_email</code>
+            <small>10:08</small>
+          </div>
+        </div>
+        <div class="query-plan mono">
+          <span>for every</span><code>completed_order</code><span>append</span><code>last before opened_email</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">A compact vocabulary</p>
+        <h2>Ask for the relationship you actually mean.</h2>
+      </div>
+      <div class="prose">
+        <p>The cohort activity is the grain of the result: one row for every completed order, support ticket, session, or other event you are investigating. Append activities add context around each cohort event.</p>
+        <p>Because every activity uses the same entity-and-time structure, the shape of a temporal relationship can be reused. Change the activity names; keep the query pattern.</p>
+      </div>
+    </div>
+    <div class="shell relationship-grid grid-3">
+      {relationships.map(([name, description]) => (
+        <article class="card">
+          <span class="relation-mark mono">↔</span>
+          <h3>{name}</h3>
+          <p>{description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section assemble-section">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">Build at query time</p>
+        <h2>Assemble a useful table from small events.</h2>
+      </div>
+      <div class="prose">
+        <p>A narrow activity stream can become a wide analysis table when you need it. Start with a cohort event, borrow features from related activities, and aggregate the history around each row.</p>
+      </div>
+    </div>
+    <div class="shell assembly card">
+      <div class="assembly-input">
+        <span class="input-label">Cohort activity</span>
+        <code>completed_order</code>
+      </div>
+      <span class="plus" aria-hidden="true">+</span>
+      <div class="assembly-input">
+        <span class="input-label">First after</span>
+        <code>shipped_order</code>
+      </div>
+      <span class="plus" aria-hidden="true">+</span>
+      <div class="assembly-input">
+        <span class="input-label">Last before</span>
+        <code>opened_email</code>
+      </div>
+      <span class="equals" aria-hidden="true">→</span>
+      <div class="assembly-output">
+        <span class="input-label">Analysis row</span>
+        <code>order · ship time · campaign</code>
+      </div>
+    </div>
+    <div class="shell actions">
+      <a class="button button-primary" href="https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#relationships">Read every relationship <span class="arrow" aria-hidden="true">↗</span></a>
+      <a class="button button-secondary" href="/ai/">See how AI can use this</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .timeline-section {
+    overflow: hidden;
+  }
+
+  .timeline-card {
+    padding: clamp(24px, 5vw, 48px);
+  }
+
+  .question span,
+  .input-label {
+    color: var(--steel);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .question p {
+    max-width: 720px;
+    margin: 12px 0 72px;
+    color: var(--navy);
+    font-size: clamp(1.3rem, 3vw, 2rem);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+  }
+
+  .timeline {
+    position: relative;
+    display: grid;
+    min-width: 680px;
+    grid-template-columns: repeat(4, 1fr);
+    padding-block: 26px 34px;
+  }
+
+  .axis {
+    position: absolute;
+    top: 31px;
+    right: 5%;
+    left: 5%;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .event {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .dot {
+    z-index: 1;
+    width: 12px;
+    height: 12px;
+    border: 3px solid var(--white);
+    border-radius: 50%;
+    background: var(--fog);
+    box-shadow: 0 0 0 1px var(--line);
+  }
+
+  .event code {
+    font-size: 0.72rem;
+  }
+
+  .event small {
+    color: var(--fog);
+    font-size: 0.68rem;
+  }
+
+  .event b {
+    position: absolute;
+    top: -24px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .event.selected .dot {
+    background: var(--seafoam);
+    box-shadow: 0 0 0 5px rgba(68, 180, 139, 0.14);
+  }
+
+  .event.selected b {
+    background: rgba(68, 180, 139, 0.12);
+    color: var(--seafoam-dark);
+  }
+
+  .event.cohort .dot {
+    background: var(--navy);
+    box-shadow: 0 0 0 5px rgba(17, 26, 74, 0.1);
+  }
+
+  .event.cohort b {
+    background: rgba(17, 26, 74, 0.08);
+    color: var(--navy);
+  }
+
+  .event.muted code {
+    color: var(--fog);
+  }
+
+  .query-plan {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    background: var(--midnight);
+    color: rgba(255, 255, 255, 0.48);
+    font-size: 0.72rem;
+  }
+
+  .query-plan code {
+    color: var(--seafoam-light);
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 72px;
+  }
+
+  .relationship-grid {
+    margin-top: 72px;
+  }
+
+  .relationship-grid article {
+    min-height: 220px;
+    padding: 24px;
+  }
+
+  .relation-mark {
+    display: inline-block;
+    margin-bottom: 48px;
+    color: var(--seafoam-dark);
+  }
+
+  .relationship-grid p {
+    margin: 0;
+    color: var(--steel);
+    font-size: 0.9rem;
+  }
+
+  .assemble-section {
+    background: var(--white);
+  }
+
+  .assembly {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1.2fr;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 64px;
+    padding: 24px;
+  }
+
+  .assembly-input,
+  .assembly-output {
+    display: grid;
+    min-height: 106px;
+    align-content: space-between;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .assembly-output {
+    border-color: var(--seafoam);
+    background: rgba(68, 180, 139, 0.07);
+  }
+
+  .assembly code {
+    overflow-wrap: anywhere;
+    font-size: 0.72rem;
+  }
+
+  .plus,
+  .equals {
+    align-self: center;
+    color: var(--fog);
+  }
+
+  .timeline-card {
+    overflow-x: auto;
+  }
+
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .assembly {
+      grid-template-columns: 1fr;
+    }
+
+    .plus,
+    .equals {
+      justify-self: center;
+    }
+  }
+</style>

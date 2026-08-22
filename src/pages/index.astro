@@ -1,0 +1,566 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ActivityStream from "../components/ActivityStream.astro";
+import QueryWorkbench from "../components/QueryWorkbench.astro";
+
+const questions = [
+  {
+    question: "Which campaigns lead to retained customers?",
+    activities: "opened_email → started_subscription → renewed_subscription",
+    relationship: "last before · first after",
+  },
+  {
+    question: "Where do orders stall before delivery?",
+    activities: "completed_order → shipped_order → received_order",
+    relationship: "first after",
+  },
+  {
+    question: "What happens before a support escalation?",
+    activities: "product_activity → opened_ticket → escalated_ticket",
+    relationship: "aggregate in before",
+  },
+];
+
+const principles = [
+  ["One definition per concept", "An activity such as completed_order is defined once, close to its source, and reused everywhere."],
+  ["One predictable structure", "Every activity shares the same core shape, so people and software know where to look."],
+  ["Relationships at query time", "Combine activities by customer and time when a question is asked—not months earlier in a dependency graph."],
+];
+---
+
+<BaseLayout
+  title="Activity Schema — A standard for modeling business activity"
+  description="Activity Schema is an open, warehouse-native standard for modeling an entity doing activities over time—and a practical semantic foundation for AI."
+  path="/"
+>
+  <section class="hero">
+    <div class="shell hero-copy">
+      <p class="eyebrow">Open standard · Warehouse native</p>
+      <h1>Give every business event a common language.</h1>
+      <p class="lede">
+        Activity Schema models what happened, who did it, and when—in one predictable structure.
+        {" "}<strong>Humans can understand it. Software can query it. AI can reason over it.</strong>
+      </p>
+      <div class="actions">
+        <a class="button button-primary" href="/activities/">Learn the model <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="button button-secondary" href="https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md">Read specification 2.0</a>
+      </div>
+    </div>
+    <div class="shell hero-visual">
+      <div class="visual-aura" aria-hidden="true"></div>
+      <ActivityStream />
+      <div class="floating-note note-left" aria-hidden="true">
+        <span>entity</span>
+        <strong>customer</strong>
+      </div>
+      <div class="floating-note note-right" aria-hidden="true">
+        <span>relationship</span>
+        <strong>last before</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="section principle-section">
+    <div class="shell">
+      <div class="section-intro">
+        <p class="eyebrow">A simpler modeling layer</p>
+        <h2>Model the business. Not every future question.</h2>
+        <p class="lede">
+          Traditional models often encode one report at a time. Activity Schema defines independent business events, then assembles them for the question at hand.
+        </p>
+      </div>
+      <div class="grid-3 principle-grid">
+        {principles.map(([title, description], index) => (
+          <article class="principle card">
+            <span class="principle-number mono">0{index + 1}</span>
+            <h3>{title}</h3>
+            <p>{description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section comparison-section">
+    <div class="shell comparison-grid">
+      <div class="comparison-copy">
+        <p class="eyebrow">One modeling layer</p>
+        <h2>From dependency maze to activity stream.</h2>
+        <p class="lede">
+          Raw sources become independent activities. Every downstream analysis starts from the same modeled layer, making provenance easier to trace and changes easier to isolate.
+        </p>
+        <a class="text-link" href="/mission/">Why the standard exists <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="diagram-stack">
+        <div class="diagram-card old-way">
+          <div class="diagram-label"><span>Traditional modeling</span><b>many dependencies</b></div>
+          <svg viewBox="0 0 560 220" role="img" aria-labelledby="traditional-title traditional-desc">
+            <title id="traditional-title">A traditional layered model</title>
+            <desc id="traditional-desc">Source tables feed several dependent models, which feed multiple outputs.</desc>
+            <g class="lines">
+              <path d="M72 45 190 40 298 82 440 40"></path><path d="M72 110 190 40"></path>
+              <path d="M72 175 190 175 298 82"></path><path d="M190 40 190 175"></path>
+              <path d="M298 82 440 110"></path><path d="M190 175 440 175"></path>
+            </g>
+            <g class="nodes sources"><rect x="24" y="24" width="96" height="42" rx="7"></rect><rect x="24" y="89" width="96" height="42" rx="7"></rect><rect x="24" y="154" width="96" height="42" rx="7"></rect></g>
+            <g class="nodes models"><rect x="145" y="19" width="90" height="42" rx="7"></rect><rect x="145" y="154" width="90" height="42" rx="7"></rect><rect x="253" y="61" width="90" height="42" rx="7"></rect></g>
+            <g class="nodes outputs"><rect x="401" y="19" width="110" height="42" rx="7"></rect><rect x="401" y="89" width="110" height="42" rx="7"></rect><rect x="401" y="154" width="110" height="42" rx="7"></rect></g>
+            <g class="labels"><text x="53" y="50">sources</text><text x="53" y="115">sources</text><text x="53" y="180">sources</text><text x="167" y="45">model</text><text x="167" y="180">model</text><text x="275" y="87">model</text><text x="431" y="45">report</text><text x="431" y="115">table</text><text x="431" y="180">agent</text></g>
+          </svg>
+        </div>
+        <div class="diagram-card new-way">
+          <div class="diagram-label"><span>Activity Schema</span><b>one shared layer</b></div>
+          <svg viewBox="0 0 560 220" role="img" aria-labelledby="activity-title activity-desc">
+            <title id="activity-title">An Activity Schema model</title>
+            <desc id="activity-desc">Source tables feed one activity stream, which supplies every output.</desc>
+            <g class="lines"><path d="M90 45 218 110"></path><path d="M90 110 218 110"></path><path d="M90 175 218 110"></path><path d="M342 110 470 45"></path><path d="M342 110 470 110"></path><path d="M342 110 470 175"></path></g>
+            <g class="nodes sources"><rect x="42" y="24" width="96" height="42" rx="7"></rect><rect x="42" y="89" width="96" height="42" rx="7"></rect><rect x="42" y="154" width="96" height="42" rx="7"></rect></g>
+            <rect class="stream-node" x="198" y="74" width="164" height="72" rx="7"></rect>
+            <g class="nodes outputs"><rect x="422" y="24" width="96" height="42" rx="7"></rect><rect x="422" y="89" width="96" height="42" rx="7"></rect><rect x="422" y="154" width="96" height="42" rx="7"></rect></g>
+            <g class="labels"><text x="71" y="50">sources</text><text x="71" y="115">sources</text><text x="71" y="180">sources</text><text class="stream-label" x="231" y="106">activity</text><text class="stream-label" x="237" y="124">stream</text><text x="448" y="50">report</text><text x="448" y="115">table</text><text x="448" y="180">agent</text></g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section ai-section">
+    <div class="shell">
+      <div class="ai-header">
+        <div>
+          <p class="eyebrow">A semantic foundation for AI</p>
+          <h2>Give the agent a map, not a maze.</h2>
+        </div>
+        <p class="lede">
+          An AI system still needs governance and validation. Activity Schema gives it something foundational: stable business concepts and a repeatable way to combine them.
+        </p>
+      </div>
+      <QueryWorkbench />
+      <div class="ai-benefits grid-3">
+        <article>
+          <span class="benefit-icon mono">{ }</span>
+          <h3>Discoverable context</h3>
+          <p>Activity names and features expose business meaning in a compact, human-readable catalog.</p>
+        </article>
+        <article>
+          <span class="benefit-icon mono">↔</span>
+          <h3>Repeatable query plans</h3>
+          <p>A small vocabulary of temporal relationships turns questions into structured, inspectable plans.</p>
+        </article>
+        <article>
+          <span class="benefit-icon mono">✓</span>
+          <h3>Traceable definitions</h3>
+          <p>Each activity is independently defined, so people can inspect the logic behind an answer and repair it at the source.</p>
+        </article>
+      </div>
+      <div class="actions">
+        <a class="button button-secondary" href="/ai/">Read the AI guide <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section question-section">
+    <div class="shell">
+      <div class="question-heading">
+        <p class="eyebrow">Reusable across domains</p>
+        <h2>Start with the question. Reuse the activities.</h2>
+      </div>
+      <div class="question-list">
+        {questions.map((item, index) => (
+          <article class="question-row">
+            <span class="question-index mono">0{index + 1}</span>
+            <h3>{item.question}</h3>
+            <div>
+              <span class="row-label">Activities</span>
+              <code>{item.activities}</code>
+            </div>
+            <div>
+              <span class="row-label">Relationship</span>
+              <code>{item.relationship}</code>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta-section">
+    <div class="shell cta-card">
+      <div>
+        <p class="eyebrow">Open by design</p>
+        <h2>Build your first activity stream.</h2>
+        <p>The specification and implementation guide live in the open. Start with one entity and the handful of activities that describe how value is created.</p>
+      </div>
+      <div class="actions">
+        <a class="button button-primary" href="https://github.com/ActivitySchema/ActivitySchema/blob/main/implementation.md">Open implementation guide <span class="arrow" aria-hidden="true">↗</span></a>
+        <a class="button button-secondary" href="https://github.com/ActivitySchema/ActivitySchema">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    overflow: hidden;
+    padding-block: clamp(88px, 12vw, 160px) clamp(88px, 10vw, 140px);
+  }
+
+  .hero-copy {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .hero-copy h1 {
+    max-width: 1080px;
+    margin-inline: auto;
+  }
+
+  .hero-copy .lede {
+    margin-inline: auto;
+  }
+
+  .hero-copy .actions {
+    justify-content: center;
+  }
+
+  .hero-visual {
+    position: relative;
+    max-width: 920px;
+    margin-top: clamp(76px, 10vw, 120px);
+  }
+
+  .visual-aura {
+    position: absolute;
+    inset: -80px -140px;
+    background: radial-gradient(ellipse at center, rgba(136, 222, 235, 0.25), transparent 62%);
+    pointer-events: none;
+  }
+
+  .floating-note {
+    position: absolute;
+    display: grid;
+    gap: 3px;
+    width: 150px;
+    padding: 13px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 8px 20px rgba(17, 26, 74, 0.09);
+    backdrop-filter: blur(12px);
+  }
+
+  .floating-note span {
+    color: var(--steel);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+  }
+
+  .floating-note strong {
+    color: var(--navy);
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+  }
+
+  .note-left {
+    bottom: -34px;
+    left: -38px;
+  }
+
+  .note-right {
+    top: -35px;
+    right: -30px;
+  }
+
+  .principle-section {
+    background: var(--white);
+  }
+
+  .section-intro {
+    max-width: 800px;
+  }
+
+  .principle-grid {
+    margin-top: 64px;
+  }
+
+  .principle {
+    min-height: 270px;
+    padding: 24px;
+  }
+
+  .principle-number {
+    display: block;
+    margin-bottom: 72px;
+    color: var(--seafoam-dark);
+    font-size: 0.72rem;
+  }
+
+  .principle p {
+    margin: 0;
+    color: var(--steel);
+    font-size: 0.93rem;
+  }
+
+  .comparison-section {
+    background: var(--canvas);
+  }
+
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.8fr) minmax(520px, 1.2fr);
+    align-items: center;
+    gap: clamp(48px, 8vw, 110px);
+  }
+
+  .text-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  .diagram-stack {
+    display: grid;
+    gap: 16px;
+  }
+
+  .diagram-card {
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--white);
+  }
+
+  .diagram-card.new-way {
+    border-color: rgba(68, 180, 139, 0.45);
+    box-shadow: 0 8px 16px rgba(17, 26, 74, 0.05);
+  }
+
+  .diagram-label {
+    display: flex;
+    justify-content: space-between;
+    color: var(--navy);
+    font-size: 0.76rem;
+  }
+
+  .diagram-label b {
+    color: var(--steel);
+    font-weight: 400;
+  }
+
+  .diagram-card svg {
+    margin-top: 10px;
+  }
+
+  .diagram-card .lines path {
+    fill: none;
+    stroke: var(--fog);
+    stroke-width: 1.2;
+  }
+
+  .diagram-card.new-way .lines path {
+    stroke: var(--seafoam);
+  }
+
+  .diagram-card .nodes rect {
+    fill: #f8f8fa;
+    stroke: var(--line);
+  }
+
+  .diagram-card .models rect {
+    fill: #eef0f6;
+    stroke: #d7d9e4;
+  }
+
+  .diagram-card .stream-node {
+    fill: var(--navy);
+  }
+
+  .diagram-card .labels {
+    fill: var(--steel);
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 10px;
+  }
+
+  .diagram-card .labels .stream-label {
+    fill: var(--white);
+    font-size: 11px;
+  }
+
+  .ai-section {
+    background: var(--white);
+  }
+
+  .ai-header {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    align-items: end;
+    gap: 72px;
+    margin-bottom: 64px;
+  }
+
+  .ai-header h2,
+  .ai-header .lede {
+    margin-bottom: 0;
+  }
+
+  .ai-benefits {
+    margin-top: 48px;
+  }
+
+  .ai-benefits article {
+    padding: 0 12px 0 0;
+  }
+
+  .benefit-icon {
+    display: inline-grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    margin-bottom: 18px;
+    border-radius: var(--radius);
+    background: rgba(68, 180, 139, 0.1);
+    color: var(--seafoam-dark);
+    font-size: 0.82rem;
+  }
+
+  .ai-benefits p {
+    margin: 0;
+    color: var(--steel);
+    font-size: 0.9rem;
+  }
+
+  .question-section {
+    background: var(--canvas);
+  }
+
+  .question-heading {
+    max-width: 780px;
+    margin-bottom: 64px;
+  }
+
+  .question-list {
+    border-top: 1px solid var(--line);
+  }
+
+  .question-row {
+    display: grid;
+    grid-template-columns: 50px 1.4fr 1fr 0.8fr;
+    align-items: start;
+    gap: 24px;
+    padding-block: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .question-row h3 {
+    margin: 0;
+  }
+
+  .question-index,
+  .row-label {
+    color: var(--fog);
+    font-size: 0.66rem;
+  }
+
+  .row-label {
+    display: block;
+    margin-bottom: 7px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .question-row code {
+    display: block;
+    font-size: 0.72rem;
+    line-height: 1.6;
+  }
+
+  .cta-section {
+    background: var(--white);
+  }
+
+  .cta-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 64px;
+    padding: clamp(32px, 6vw, 72px);
+    border-radius: var(--radius);
+    background: var(--peach);
+  }
+
+  .cta-card h2 {
+    max-width: 720px;
+    color: var(--midnight);
+  }
+
+  .cta-card p {
+    max-width: 680px;
+    margin: 0;
+    color: rgba(1, 24, 33, 0.75);
+  }
+
+  .cta-card .eyebrow::before {
+    background: var(--midnight);
+  }
+
+  .cta-card .actions {
+    align-items: flex-end;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  @media (max-width: 960px) {
+    .comparison-grid,
+    .ai-header,
+    .cta-card {
+      grid-template-columns: 1fr;
+    }
+
+    .comparison-copy {
+      max-width: 760px;
+    }
+
+    .question-row {
+      grid-template-columns: 40px 1fr 1fr;
+    }
+
+    .question-row h3 {
+      grid-column: 2 / -1;
+    }
+
+    .question-row > div:first-of-type {
+      grid-column: 2;
+    }
+
+    .cta-card .actions {
+      align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .hero {
+      padding-top: 72px;
+    }
+
+    .floating-note {
+      display: none;
+    }
+
+    .question-row {
+      grid-template-columns: 32px 1fr;
+    }
+
+    .question-row > div:first-of-type,
+    .question-row > div:last-of-type {
+      grid-column: 2;
+    }
+
+    .cta-card .actions,
+    .cta-card .button {
+      width: 100%;
+    }
+  }
+</style>
