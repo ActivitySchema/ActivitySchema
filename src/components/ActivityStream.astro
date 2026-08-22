@@ -10,7 +10,7 @@ const rows = [
 
 <div class="stream-card" aria-label="Example activity stream table">
   <div class="card-toolbar">
-    <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    <span class="toolbar-label mono">Activity stream</span>
     <span class="mono">customer_stream</span>
     <span class="status"><i></i> live model</span>
   </div>
@@ -62,20 +62,11 @@ const rows = [
     font-size: 0.7rem;
   }
 
-  .window-dots {
-    display: flex;
-    gap: 5px;
-  }
-
-  .window-dots span {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--line);
-  }
-
-  .window-dots span:first-child {
-    background: var(--peach);
+  .toolbar-label {
+    color: var(--fog);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   .status {
@@ -89,9 +80,7 @@ const rows = [
   .status i {
     width: 6px;
     height: 6px;
-    border-radius: 50%;
     background: var(--seafoam);
-    box-shadow: 0 0 0 4px rgba(68, 180, 139, 0.12);
   }
 
   .table-wrap {
@@ -149,7 +138,7 @@ const rows = [
       grid-template-columns: 1fr auto;
     }
 
-    .window-dots {
+    .toolbar-label {
       display: none;
     }
   }

@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import LogoMark from "../components/LogoMark.astro";
 
 interface Props {
   title: string;
@@ -7,19 +8,25 @@ interface Props {
   path?: string;
 }
 
-const {
-  title,
-  description,
-  path = Astro.url.pathname,
-} = Astro.props;
-
+const { title, description, path = Astro.url.pathname } = Astro.props;
 const canonical = new URL(path, Astro.site);
 const nav = [
+  { href: "/activities/", label: "The model" },
+  { href: "/efficiency/", label: "Efficiency" },
+  { href: "/ai/", label: "For AI" },
+  { href: "/global-standard/", label: "The future" },
+  { href: "/mission/", label: "About" },
+];
+const guideNav = [
   { href: "/activities/", label: "Activities" },
   { href: "/temporal-joins/", label: "Temporal joins" },
-  { href: "/ai/", label: "For AI" },
-  { href: "/mission/", label: "Mission" },
+  { href: "/efficiency/", label: "Efficiency" },
+  { href: "/dimensions/", label: "Dimensions and joins" },
+  { href: "/ai/", label: "Activity Schema for AI" },
+  { href: "/global-standard/", label: "A global activity standard" },
+  { href: "/mission/", label: "Mission and creator" },
 ];
+const isActive = (href: string) => path === href || (href !== "/" && path.startsWith(href));
 ---
 
 <!doctype html>
@@ -29,7 +36,7 @@ const nav = [
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#111a4a" />
+    <meta name="theme-color" content="#f6f6f8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />
@@ -42,44 +49,50 @@ const nav = [
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header">
-      <div class="shell nav-shell">
+    <header class="site-header" data-site-header>
+      <div class="shell nav-row">
         <a class="brand" href="/" aria-label="Activity Schema home">
-          <svg viewBox="0 0 34 34" aria-hidden="true">
-            <rect width="34" height="34" rx="7" fill="#111a4a"></rect>
-            <path d="M9 25 15.4 9h3.3L25 25h-4.1l-1.3-3.8h-5.4L12.8 25H9Zm6.2-7h3.2l-1.6-4.7-1.6 4.7Z" fill="#fff"></path>
-            <circle cx="26" cy="8" r="3" fill="#ec652b"></circle>
-          </svg>
+          <LogoMark size={34} />
           <span>Activity Schema</span>
         </a>
-        <nav aria-label="Primary navigation">
-          {
-            nav.map((item) => (
-              <a href={item.href} aria-current={path.startsWith(item.href) ? "page" : undefined}>
-                {item.label}
-              </a>
-            ))
-          }
+        <nav class="desktop-nav" aria-label="Primary navigation">
+          {nav.map((item) => (
+            <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>{item.label}</a>
+          ))}
           <a class="nav-spec" href="https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md">
             Read the spec <span aria-hidden="true">↗</span>
           </a>
         </nav>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu">
+          <span>Menu</span>
+          <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" /></svg>
+        </button>
+      </div>
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <nav class="shell mobile-nav" aria-label="Mobile navigation">
+          {guideNav.map((item, index) => (
+            <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+              <span class="mono">{String(index + 1).padStart(2, "0")}</span>{item.label}
+            </a>
+          ))}
+          <a class="mobile-spec" href="https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md">Read specification 2.0 <span aria-hidden="true">↗</span></a>
+        </nav>
       </div>
     </header>
-    <main id="main">
-      <slot />
-    </main>
+    <main id="main"><slot /></main>
     <footer class="site-footer">
       <div class="shell footer-grid">
-        <div>
-          <a class="brand footer-brand" href="/">Activity Schema</a>
+        <div class="footer-intro">
+          <a class="brand footer-brand" href="/"><LogoMark size={38} /><span>Activity Schema</span></a>
           <p>An open standard for modeling business activity over time.</p>
         </div>
         <div>
           <p class="footer-label">Learn</p>
           <a href="/activities/">Activities</a>
           <a href="/temporal-joins/">Temporal joins</a>
-          <a href="/ai/">Activity Schema for AI</a>
+          <a href="/efficiency/">Efficiency</a>
+          <a href="/dimensions/">Dimensions and joins</a>
+          <a href="/ai/">For AI</a>
         </div>
         <div>
           <p class="footer-label">Build</p>
@@ -87,12 +100,47 @@ const nav = [
           <a href="https://github.com/ActivitySchema/ActivitySchema/blob/main/implementation.md">Implementation guide</a>
           <a href="https://github.com/ActivitySchema/ActivitySchema">GitHub repository</a>
         </div>
+        <div>
+          <p class="footer-label">Connect</p>
+          <a href="/global-standard/">The global standard</a>
+          <a href="mailto:ahmed@polyform.ai?subject=Activity%20Schema%20project">Share your project</a>
+          <a href="https://www.linkedin.com/in/elsamadisi/">Ahmed on LinkedIn</a>
+        </div>
       </div>
       <div class="shell footer-bottom">
         <span>Apache 2.0 licensed</span>
         <span>Created by Ahmed Elsamadisi</span>
       </div>
     </footer>
+    <script>
+      const header = document.querySelector("[data-site-header]");
+      const button = header?.querySelector(".menu-button");
+      const menu = header?.querySelector(".mobile-menu");
+
+      const closeMenu = () => {
+        if (!(button instanceof HTMLButtonElement) || !(menu instanceof HTMLElement)) return;
+        button.setAttribute("aria-expanded", "false");
+        menu.hidden = true;
+        document.body.classList.remove("menu-open");
+      };
+
+      if (button instanceof HTMLButtonElement && menu instanceof HTMLElement) {
+        button.addEventListener("click", () => {
+          const opening = button.getAttribute("aria-expanded") !== "true";
+          button.setAttribute("aria-expanded", String(opening));
+          menu.hidden = !opening;
+          document.body.classList.toggle("menu-open", opening);
+        });
+        menu.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+        window.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            closeMenu();
+            button.focus();
+          }
+        });
+        window.matchMedia("(min-width: 901px)").addEventListener("change", closeMenu);
+      }
+    </script>
   </body>
 </html>
 
@@ -101,65 +149,69 @@ const nav = [
     position: sticky;
     z-index: 20;
     top: 0;
-    border-bottom: 1px solid rgba(227, 228, 232, 0.82);
-    background: rgba(246, 246, 248, 0.82);
-    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--line);
+    background: rgba(246, 246, 248, 0.96);
+    backdrop-filter: blur(12px);
   }
 
-  .nav-shell {
+  .nav-row {
+    position: relative;
+    z-index: 2;
     display: flex;
     min-height: 72px;
     align-items: center;
     justify-content: space-between;
-    gap: 32px;
+    gap: 28px;
   }
 
   .brand {
     display: inline-flex;
     flex: none;
     align-items: center;
-    gap: 11px;
+    gap: 10px;
     color: var(--navy);
     font-weight: 650;
     letter-spacing: -0.02em;
     text-decoration: none;
   }
 
-  .brand svg {
-    width: 34px;
-    height: 34px;
-  }
-
-  nav {
+  .desktop-nav {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 1px;
   }
 
-  nav a {
-    padding: 9px 11px;
-    border-radius: var(--radius);
+  .desktop-nav a {
+    padding: 10px;
     color: var(--slate);
-    font-size: 0.875rem;
+    font-size: 0.82rem;
     text-decoration: none;
   }
 
-  nav a:hover,
-  nav a[aria-current="page"] {
-    background: rgba(255, 255, 255, 0.66);
+  .desktop-nav a:hover,
+  .desktop-nav a[aria-current="page"] {
     color: var(--navy);
+    text-decoration: underline;
+    text-decoration-color: var(--orange);
+    text-underline-offset: 7px;
   }
 
-  nav .nav-spec {
+  .desktop-nav .nav-spec {
     margin-left: 8px;
     padding-inline: 15px;
     background: var(--navy);
     color: var(--white);
   }
 
-  nav .nav-spec:hover {
+  .desktop-nav .nav-spec:hover {
     background: var(--midnight);
     color: var(--white);
+    text-decoration: none;
+  }
+
+  .menu-button,
+  .mobile-menu {
+    display: none;
   }
 
   .site-footer {
@@ -170,8 +222,8 @@ const nav = [
 
   .footer-grid {
     display: grid;
-    grid-template-columns: minmax(280px, 2fr) 1fr 1fr;
-    gap: 56px;
+    grid-template-columns: minmax(240px, 1.7fr) repeat(3, 1fr);
+    gap: 48px;
   }
 
   .site-footer p,
@@ -182,27 +234,29 @@ const nav = [
   .site-footer a {
     display: block;
     width: fit-content;
-    margin-bottom: 12px;
-    font-size: 0.92rem;
+    margin-bottom: 11px;
+    font-size: 0.88rem;
     text-decoration: none;
   }
 
-  .site-footer a:hover {
-    color: var(--white);
-  }
+  .site-footer a:hover { color: var(--white); }
 
   .site-footer .footer-brand {
     margin-bottom: 18px;
     color: var(--white);
-    font-size: 1.15rem;
+    font-size: 1.12rem;
   }
+
+  .site-footer .footer-brand :global(.logo-mark) { color: var(--white); }
+
+  .footer-intro p { max-width: 270px; }
 
   .site-footer .footer-label {
     margin-bottom: 18px;
     color: var(--white);
-    font-size: 0.76rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
@@ -216,44 +270,77 @@ const nav = [
     font-size: 0.78rem;
   }
 
-  @media (max-width: 900px) {
-    .nav-shell {
-      min-height: auto;
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 8px;
-      padding-block: 14px;
-    }
-
-    nav {
-      width: 100%;
-      overflow-x: auto;
-      padding-bottom: 2px;
-    }
-
-    nav a {
-      white-space: nowrap;
-    }
-
-    nav .nav-spec {
-      margin-left: 4px;
-    }
+  @media (max-width: 1040px) {
+    .desktop-nav a { padding-inline: 7px; }
+    .desktop-nav .nav-spec { display: none; }
   }
 
-  @media (max-width: 700px) {
-    nav .nav-spec {
-      display: none;
+  @media (max-width: 900px) {
+    .nav-row { min-height: 64px; }
+    .desktop-nav { display: none; }
+    .menu-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0 9px 12px;
+      border: 0;
+      background: transparent;
+      color: var(--navy);
+      font: inherit;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
     }
+    .menu-button svg { width: 18px; height: 18px; }
+    .menu-button path { fill: none; stroke: currentColor; stroke-width: 1.5; }
+    .menu-button[aria-expanded="true"] path:first-child { transform: translateY(4px) rotate(45deg); transform-origin: center; }
+    .menu-button[aria-expanded="true"] path:last-child { transform: translateY(-4px) rotate(-45deg); transform-origin: center; }
+    .mobile-menu {
+      position: fixed;
+      z-index: 1;
+      top: 64px;
+      right: 0;
+      left: 0;
+      display: block;
+      height: calc(100dvh - 64px);
+      overflow-y: auto;
+      border-top: 1px solid var(--line);
+      background: var(--canvas);
+    }
+    .mobile-menu[hidden] { display: none; }
+    .mobile-nav { display: grid; padding-block: 20px 36px; }
+    .mobile-nav a {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      padding-block: 15px;
+      border-bottom: 1px solid var(--line);
+      color: var(--navy);
+      font-size: clamp(1.05rem, 5vw, 1.35rem);
+      font-weight: 550;
+      text-decoration: none;
+    }
+    .mobile-nav a[aria-current="page"] { border-bottom-color: var(--orange); }
+    .mobile-nav .mono { padding-top: 4px; color: var(--steel); font-size: 0.62rem; font-weight: 400; }
+    .mobile-nav .mobile-spec {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 22px;
+      padding: 15px;
+      border: 0;
+      background: var(--navy);
+      color: var(--white);
+      font-size: 0.9rem;
+    }
+    :global(body.menu-open) { overflow: hidden; }
+    .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; }
+    .footer-intro { grid-column: 1 / -1; }
+  }
 
-    .footer-grid {
-      grid-template-columns: 1fr;
-      gap: 32px;
-    }
-
-    .footer-bottom {
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 8px;
-    }
+  @media (max-width: 620px) {
+    .brand span { font-size: 0.95rem; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px 24px; }
+    .footer-intro { grid-column: 1 / -1; }
+    .footer-bottom { align-items: flex-start; flex-direction: column; gap: 8px; }
   }
 </style>

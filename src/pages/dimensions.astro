@@ -1,0 +1,112 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const keep = [
+  ["Product reference", "A SKU dimension can hold a product name, category, or hierarchy used across the business."],
+  ["Entity reference", "A customer or company table can hold current, non-event attributes and identity mappings."],
+  ["Shared classifications", "Stable reference data such as geography, currency, or account ownership can remain dimensional."],
+];
+const avoid = [
+  ["First-touch columns", "first_utm_source is a temporal conclusion. Derive it from the relevant activity when the question is asked."],
+  ["Duplicated event facts", "Do not copy activity history into a dimension where definitions can drift out of sync."],
+  ["Dependency towers", "Avoid a chain of intermediate models between the activity stream and every consumer."],
+];
+---
+
+<BaseLayout
+  title="Dimensions and joins — Activity Schema"
+  description="Activity Schema works with useful dimensions and joins while keeping activity-derived facts in the event stream."
+  path="/dimensions/"
+>
+  <header class="page-hero shell">
+    <p class="eyebrow">Modeling boundaries</p>
+    <h1>One activity layer does not mean one table forever.</h1>
+    <p class="lede">Activity Schema is the primary layer for what happened over time. It can still join to product, customer, and other useful reference data. The discipline is knowing which facts belong in each place.</p>
+  </header>
+
+  <section class="section-tight">
+    <div class="shell model-map">
+      <div class="activity-core">
+        <span class="mono">Primary modeled layer</span>
+        <strong>Activity stream</strong>
+        <small>what happened · who · when · event features</small>
+      </div>
+      <div class="join-line" aria-hidden="true">join when needed →</div>
+      <div class="dimensions">
+        <span>SKU dimension</span><span>Customer reference</span><span>Geography</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell intro-grid">
+      <div>
+        <p class="eyebrow">A practical boundary</p>
+        <h2>Keep events in the stream. Keep reference facts in dimensions.</h2>
+      </div>
+      <div class="prose">
+        <p>A dimension is useful when it describes a reusable thing. An activity is useful when it records that something happened. Join them at query time when the answer needs both.</p>
+        <p>The Activity Schema 2.0 specification explicitly allows optional entity tables and dimensional joins. Simplicity comes from protecting the activity layer—not from banning every other modeling technique.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section comparison-section">
+    <div class="shell comparison-grid">
+      <div>
+        <p class="eyebrow">Useful dimensions</p>
+        {keep.map(([title, description]) => (
+          <article><span aria-hidden="true">+</span><div><h3>{title}</h3><p>{description}</p></div></article>
+        ))}
+      </div>
+      <div>
+        <p class="eyebrow">Patterns to avoid</p>
+        {avoid.map(([title, description]) => (
+          <article><span class="avoid" aria-hidden="true">−</span><div><h3>{title}</h3><p>{description}</p></div></article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section rule-section">
+    <div class="shell rule-grid">
+      <p class="mono">A useful test</p>
+      <h2>If a value depends on what happened first, last, before, or after—derive it from activities.</h2>
+      <div class="prose">
+        <p>That keeps the original history intact, makes the logic visible, and lets another question use a different temporal relationship without remaking the warehouse.</p>
+        <div class="actions">
+          <a class="button button-primary" href="/temporal-joins/">Learn temporal relationships <span aria-hidden="true">→</span></a>
+          <a class="button button-secondary" href="https://github.com/ActivitySchema/ActivitySchema/blob/main/implementation.md">Implementation guide</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .model-map { display: grid; grid-template-columns: 1.2fr auto 1fr; align-items: stretch; border: 1px solid var(--line); background: var(--white); }
+  .activity-core { display: grid; gap: 12px; padding: clamp(28px, 5vw, 56px); border-top: 3px solid var(--seafoam); }
+  .activity-core span { color: var(--steel); font-size: 0.65rem; text-transform: uppercase; }
+  .activity-core strong { color: var(--navy); font-size: clamp(1.8rem, 4vw, 3.5rem); letter-spacing: -0.04em; }
+  .activity-core small { color: var(--steel); }
+  .join-line { display: flex; align-items: center; padding: 20px; border-inline: 1px solid var(--line); color: var(--steel); font-size: 0.72rem; }
+  .dimensions { display: grid; align-content: center; gap: 10px; padding: clamp(28px, 5vw, 56px); }
+  .dimensions span { padding: 11px 12px; border-bottom: 1px solid var(--line); color: var(--navy); font-size: 0.85rem; }
+  .intro-grid, .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(48px, 8vw, 100px); }
+  .comparison-section { background: var(--white); }
+  .comparison-grid > div { min-width: 0; }
+  .comparison-grid article { display: grid; grid-template-columns: 24px 1fr; gap: 14px; padding-block: 24px; border-top: 1px solid var(--line); }
+  .comparison-grid article > span { color: var(--seafoam-dark); font-family: monospace; }
+  .comparison-grid article > span.avoid { color: var(--orange); }
+  .comparison-grid article p { margin: 0; color: var(--steel); }
+  .rule-section { background: var(--midnight); }
+  .rule-grid { display: grid; grid-template-columns: 120px minmax(0, 1.35fr) minmax(0, 0.8fr); gap: clamp(32px, 6vw, 80px); }
+  .rule-grid > .mono { color: var(--seafoam); font-size: 0.7rem; text-transform: uppercase; }
+  .rule-grid h2 { color: var(--white); }
+  .rule-grid .prose p { color: rgba(255, 255, 255, 0.66); }
+  .rule-grid .button-secondary { border-color: rgba(255, 255, 255, 0.5); color: var(--white); background: transparent; }
+  @media (max-width: 820px) {
+    .model-map, .intro-grid, .comparison-grid, .rule-grid { grid-template-columns: 1fr; }
+    .join-line { justify-content: center; border-block: 1px solid var(--line); border-inline: 0; }
+  }
+</style>

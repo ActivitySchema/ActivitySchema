@@ -36,6 +36,27 @@ const boundaries = [
     </div>
   </section>
 
+  <section class="section journey-section">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">The customer journey</p>
+        <h2>One customer. One chronological context window.</h2>
+      </div>
+      <div class="prose">
+        <p>Filter the activity stream to one customer and the important events across product, marketing, sales, billing, and support appear in order. The result is a dense account of what happened without first traversing a different model for every source system.</p>
+        <p>For an AI system, this is useful context engineering: fewer structural tokens are spent explaining table relationships, while more of the context window can describe meaningful behavior. The exact token and scan savings depend on the implementation and the question.</p>
+      </div>
+    </div>
+    <div class="shell journey-table" role="table" aria-label="A customer journey represented as activities">
+      <div class="journey-head" role="row"><span>Time</span><span>Activity</span><span>System</span><span>Relevant context</span></div>
+      <div role="row"><time>09:04</time><code>opened_email</code><span>Marketing</span><span>campaign: spring_launch</span></div>
+      <div role="row"><time>09:41</time><code>started_trial</code><span>Product</span><span>plan: team</span></div>
+      <div role="row"><time>14:22</time><code>invited_teammate</code><span>Product</span><span>role: admin</span></div>
+      <div role="row"><time>3 days later</time><code>opened_support_ticket</code><span>Support</span><span>topic: permissions</span></div>
+      <div role="row"><time>14 days later</time><code>started_subscription</code><span>Billing</span><span>arr: 4,800</span></div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="shell split">
       <div>
@@ -87,6 +108,19 @@ const boundaries = [
           </div>
         </article>
       ))}
+    </div>
+  </section>
+
+  <section class="section language-section">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">Human-readable reasoning</p>
+        <h2>A query plan a person can explain.</h2>
+      </div>
+      <div class="prose">
+        <p><code>last opened_email before started_subscription</code> is both a precise temporal instruction and a sentence a business user can challenge. The vocabulary of cohort, first, last, before, after, and in between gives an agent reusable analytical moves.</p>
+        <p>The goal is not merely to help AI generate more SQL. It is to make the path from question to data to answer legible enough that a person can inspect the chosen activities, definitions, assumptions, and evidence.</p>
+      </div>
     </div>
   </section>
 
@@ -192,9 +226,39 @@ const boundaries = [
   }
 
   .loop-section,
-  .reference-section {
+  .reference-section,
+  .journey-section {
     background: var(--white);
   }
+
+  .journey-table {
+    margin-top: 64px;
+    border-block: 1px solid var(--line);
+  }
+
+  .journey-table > div {
+    display: grid;
+    grid-template-columns: 0.8fr 1.35fr 1fr 1.4fr;
+    gap: 20px;
+    padding: 15px 12px;
+    border-bottom: 1px solid var(--line);
+    color: var(--steel);
+    font-size: 0.82rem;
+  }
+
+  .journey-table > div:last-child { border-bottom: 0; }
+
+  .journey-table .journey-head {
+    color: var(--navy);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .journey-table code { font-size: 0.76rem; }
+
+  .language-section { border-top: 1px solid var(--line); }
 
   .loop-grid {
     display: grid;
@@ -323,6 +387,15 @@ const boundaries = [
 
     .loop-number {
       margin-bottom: 52px;
+    }
+
+    .journey-table > div {
+      grid-template-columns: 0.7fr 1.3fr;
+    }
+
+    .journey-table > div:not(.journey-head) span,
+    .journey-table .journey-head span:nth-child(n + 3) {
+      display: none;
     }
   }
 </style>

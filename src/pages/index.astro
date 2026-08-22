@@ -26,6 +26,12 @@ const principles = [
   ["One predictable structure", "Every activity shares the same core shape, so people and software know where to look."],
   ["Relationships at query time", "Combine activities by customer and time when a question is asked—not months earlier in a dependency graph."],
 ];
+
+const guides = [
+  ["Efficiency", "Why independent activities and incremental updates reduce repeated work.", "/efficiency/"],
+  ["Dimensions and joins", "How to keep useful reference tables without recreating the dependency maze.", "/dimensions/"],
+  ["A global standard", "A working concept for governed, cross-company context for agents.", "/global-standard/"],
+];
 ---
 
 <BaseLayout
@@ -47,16 +53,7 @@ const principles = [
       </div>
     </div>
     <div class="shell hero-visual">
-      <div class="visual-aura" aria-hidden="true"></div>
       <ActivityStream />
-      <div class="floating-note note-left" aria-hidden="true">
-        <span>entity</span>
-        <strong>customer</strong>
-      </div>
-      <div class="floating-note note-right" aria-hidden="true">
-        <span>relationship</span>
-        <strong>last before</strong>
-      </div>
     </div>
   </section>
 
@@ -184,6 +181,22 @@ const principles = [
     </div>
   </section>
 
+  <section class="section guide-section">
+    <div class="shell guide-intro">
+      <p class="eyebrow">Go deeper</p>
+      <h2>A practical guide to the model—and where it can go.</h2>
+    </div>
+    <div class="shell guide-grid">
+      {guides.map(([title, description, href], index) => (
+        <a href={href}>
+          <span class="mono">0{index + 1}</span>
+          <div><h3>{title}</h3><p>{description}</p></div>
+          <b aria-hidden="true">→</b>
+        </a>
+      ))}
+    </div>
+  </section>
+
   <section class="section cta-section">
     <div class="shell cta-card">
       <div>
@@ -228,49 +241,6 @@ const principles = [
     position: relative;
     max-width: 920px;
     margin-top: clamp(76px, 10vw, 120px);
-  }
-
-  .visual-aura {
-    position: absolute;
-    inset: -80px -140px;
-    background: radial-gradient(ellipse at center, rgba(136, 222, 235, 0.25), transparent 62%);
-    pointer-events: none;
-  }
-
-  .floating-note {
-    position: absolute;
-    display: grid;
-    gap: 3px;
-    width: 150px;
-    padding: 13px 15px;
-    border: 1px solid rgba(255, 255, 255, 0.95);
-    border-radius: var(--radius);
-    background: rgba(255, 255, 255, 0.75);
-    box-shadow: 0 8px 20px rgba(17, 26, 74, 0.09);
-    backdrop-filter: blur(12px);
-  }
-
-  .floating-note span {
-    color: var(--steel);
-    font-size: 0.65rem;
-    text-transform: uppercase;
-  }
-
-  .floating-note strong {
-    color: var(--navy);
-    font-family: "SFMono-Regular", Consolas, monospace;
-    font-size: 0.72rem;
-    font-weight: 500;
-  }
-
-  .note-left {
-    bottom: -34px;
-    left: -38px;
-  }
-
-  .note-right {
-    top: -35px;
-    right: -30px;
   }
 
   .principle-section {
@@ -335,7 +305,6 @@ const principles = [
 
   .diagram-card.new-way {
     border-color: rgba(68, 180, 139, 0.45);
-    box-shadow: 0 8px 16px rgba(17, 26, 74, 0.05);
   }
 
   .diagram-label {
@@ -481,6 +450,17 @@ const principles = [
     background: var(--white);
   }
 
+  .guide-section { background: var(--midnight); }
+  .guide-intro { max-width: 850px; }
+  .guide-intro h2, .guide-intro .eyebrow { color: var(--white); }
+  .guide-grid { margin-top: 60px; border-top: 1px solid rgba(255, 255, 255, 0.16); }
+  .guide-grid a { display: grid; grid-template-columns: 50px 1fr auto; gap: 24px; padding-block: 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.16); text-decoration: none; }
+  .guide-grid a > span { padding-top: 5px; color: var(--seafoam); font-size: 0.66rem; }
+  .guide-grid h3 { color: var(--white); }
+  .guide-grid p { margin: 0; color: rgba(255, 255, 255, 0.58); }
+  .guide-grid b { align-self: center; color: var(--white); font-weight: 400; transition: transform 160ms ease; }
+  .guide-grid a:hover b { transform: translateX(4px); }
+
   .cta-card {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -543,10 +523,6 @@ const principles = [
   @media (max-width: 620px) {
     .hero {
       padding-top: 72px;
-    }
-
-    .floating-note {
-      display: none;
     }
 
     .question-row {

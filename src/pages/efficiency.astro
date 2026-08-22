@@ -1,0 +1,127 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const advantages = [
+  ["Narrow by design", "A predictable set of core columns keeps the modeled layer compact. Query only the activities, time range, and features the question needs."],
+  ["Incremental by default", "Append new activity rows instead of rebuilding a chain of dependent models. Late and changing events still need an explicit strategy."],
+  ["One key through time", "A consistent entity identifier and timestamp let you connect behavior across source systems without pre-building every relationship."],
+  ["Assemble on demand", "Start from a cohort activity, append the context you need, and shape the result for the current question."],
+];
+---
+
+<BaseLayout
+  title="Efficiency — Activity Schema"
+  description="How Activity Schema reduces modeling work and supports fast, incremental, query-time analysis in modern data warehouses."
+  path="/efficiency/"
+>
+  <header class="page-hero shell">
+    <p class="eyebrow">Efficiency</p>
+    <h1>Do less work for every new question.</h1>
+    <p class="lede">Activity Schema keeps business events narrow, independent, and incrementally maintainable. Instead of rebuilding layers of derived tables, you assemble the answer from the activity stream when you need it.</p>
+  </header>
+
+  <section class="section-tight">
+    <div class="shell contrast" aria-label="Comparison of layered modeling and Activity Schema updates">
+      <article>
+        <span class="mono label">Layered model</span>
+        <div class="cascade">
+          <span>source</span><i>→</i><span>staging</span><i>→</i><span>model</span><i>→</i><span>mart</span><i>→</i><span>answer</span>
+        </div>
+        <p>A change can cascade through dependent layers.</p>
+      </article>
+      <article class="activity-way">
+        <span class="mono label">Activity Schema</span>
+        <div class="cascade">
+          <span>new events</span><i>→</i><strong>activity stream</strong><i>→</i><span>answer</span>
+        </div>
+        <p>Append the new activity data, then shape it at query time.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell section-head">
+      <div>
+        <p class="eyebrow">Where the efficiency comes from</p>
+        <h2>A small number of durable choices.</h2>
+      </div>
+      <p class="lede">The gain is architectural: fewer modeled dependencies, a shared query pattern, and less duplicated business logic to maintain.</p>
+    </div>
+    <div class="shell advantage-grid">
+      {advantages.map(([title, description], index) => (
+        <article>
+          <span class="mono">0{index + 1}</span>
+          <h3>{title}</h3>
+          <p>{description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section caveat-section">
+    <div class="shell two-column">
+      <div>
+        <p class="eyebrow">Query-time flexibility</p>
+        <h2>Think schema on read—with a stable contract underneath.</h2>
+      </div>
+      <div class="prose">
+        <p>The activity stream is strongly modeled: the entity, event, timestamp, and activity-specific features are defined in advance. What stays flexible is the analytical shape. A query can pivot, append, or aggregate those activities differently for each use case.</p>
+        <p>This avoids predicting every future report in the warehouse model. It also keeps the answer explainable: the result names the activities and temporal relationships it used.</p>
+        <a class="text-link" href="/temporal-joins/">See how query-time assembly works <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section truth-section">
+    <div class="shell two-column">
+      <div>
+        <p class="eyebrow">An honest performance claim</p>
+        <h2>The model enables efficiency. The warehouse still determines it.</h2>
+      </div>
+      <div class="prose">
+        <p>Fewer columns and joins can reduce work, especially when queries filter to relevant activities and time ranges. But an activity stream is not automatically cheaper in every warehouse or workload.</p>
+        <p>Partitioning, clustering, stream size, feature extraction, late-arriving data, identifier changes, and the warehouse optimizer all matter. Benchmark a shared stream against per-activity tables and choose the physical layout that performs best while preserving the standard contract.</p>
+        <div class="actions">
+          <a class="button button-primary" href="https://github.com/ActivitySchema/ActivitySchema/blob/main/implementation.md">Read implementation guidance <span aria-hidden="true">↗</span></a>
+          <a class="button button-secondary" href="/dimensions/">Next: dimensions and joins</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contrast { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); }
+  .contrast article { min-width: 0; padding: clamp(24px, 5vw, 52px); background: var(--white); }
+  .contrast article + article { border-left: 1px solid var(--line); }
+  .contrast .activity-way { border-top: 3px solid var(--seafoam); }
+  .label { display: block; margin-bottom: 40px; color: var(--steel); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .cascade { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 30px; }
+  .cascade span, .cascade strong { padding: 8px 10px; border: 1px solid var(--line); color: var(--navy); font-size: 0.74rem; font-weight: 500; }
+  .cascade strong { border-color: var(--seafoam); background: rgba(68, 180, 139, 0.06); }
+  .cascade i { color: var(--fog); font-style: normal; }
+  .contrast p { max-width: 480px; margin: 0; color: var(--steel); font-size: 0.9rem; }
+  .section-head, .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(48px, 8vw, 100px); }
+  .advantage-grid { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 72px; border-block: 1px solid var(--line); }
+  .advantage-grid article { min-height: 310px; padding: 24px; border-right: 1px solid var(--line); }
+  .advantage-grid article:last-child { border-right: 0; }
+  .advantage-grid span { display: block; margin-bottom: 96px; color: var(--seafoam-dark); font-size: 0.68rem; }
+  .advantage-grid p { margin: 0; color: var(--steel); font-size: 0.88rem; }
+  .caveat-section { background: var(--white); }
+  .truth-section { background: var(--midnight); }
+  .truth-section h2, .truth-section .eyebrow { color: var(--white); }
+  .truth-section p { color: rgba(255, 255, 255, 0.68); }
+  .truth-section .button-secondary { border-color: rgba(255, 255, 255, 0.5); color: var(--white); background: transparent; }
+  @media (max-width: 900px) {
+    .contrast, .section-head, .two-column { grid-template-columns: 1fr; }
+    .contrast article + article { border-top: 1px solid var(--line); border-left: 0; }
+    .advantage-grid { grid-template-columns: repeat(2, 1fr); }
+    .advantage-grid article:nth-child(2) { border-right: 0; }
+    .advantage-grid article:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
+  }
+  @media (max-width: 560px) {
+    .advantage-grid { grid-template-columns: 1fr; }
+    .advantage-grid article { min-height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+    .advantage-grid span { margin-bottom: 42px; }
+  }
+</style>

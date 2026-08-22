@@ -18,7 +18,12 @@ The standard gives an AI system a compact, consistent vocabulary for discovering
 - Website: https://www.activityschema.com/
 - Activity guide: https://www.activityschema.com/activities/
 - Temporal joins guide: https://www.activityschema.com/temporal-joins/
+- Efficiency guide: https://www.activityschema.com/efficiency/
+- Dimensions and joins guide: https://www.activityschema.com/dimensions/
 - AI guide: https://www.activityschema.com/ai/
+- Global activity standard concept: https://www.activityschema.com/global-standard/
+- Mission and creator: https://www.activityschema.com/mission/
 - Specification 2.0: https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md
 - Implementation guide: https://github.com/ActivitySchema/ActivitySchema/blob/main/implementation.md
 - Source repository: https://github.com/ActivitySchema/ActivitySchema
+- Community submissions: mailto:ahmed@polyform.ai?subject=Activity%20Schema%20project

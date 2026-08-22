@@ -1,0 +1,123 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const safeguards = [
+  ["Permission", "The provider decides which activities, questions, and outputs are allowed."],
+  ["Local execution", "Prompts can be translated into governed analysis where the data already lives."],
+  ["Filtered output", "Return an approved result—not unrestricted access to underlying customer rows."],
+  ["Auditability", "Record the request, definitions, providers, transformations, and result delivered."],
+];
+---
+
+<BaseLayout
+  title="A global activity standard — Activity Schema"
+  description="A working concept for using a shared Activity Schema to discover and combine governed business context for AI agents."
+  path="/global-standard/"
+>
+  <header class="page-hero shell">
+    <p class="eyebrow">A working concept</p>
+    <h1>What if agents could request context in a shared language?</h1>
+    <p class="lede">Activity Schema could become more than a company’s internal model. A common catalog of activities could let organizations advertise useful context, answer permitted questions where the data lives, and deliver governed results across company boundaries.</p>
+    <div class="status"><span>Exploration</span><p>This is a direction for the community—not a live marketplace or a promise that governance is solved.</p></div>
+  </header>
+
+  <section class="section-tight">
+    <div class="shell flow" aria-label="Potential flow for governed activity context sharing">
+      <article><span class="mono">01</span><h3>Discover</h3><p>Providers publish the activities they can answer from.</p></article>
+      <i aria-hidden="true">→</i>
+      <article><span class="mono">02</span><h3>Request</h3><p>A buyer or agent submits a question, purpose, and constraints.</p></article>
+      <i aria-hidden="true">→</i>
+      <article><span class="mono">03</span><h3>Run locally</h3><p>The request is translated into permitted activity queries near the data.</p></article>
+      <i aria-hidden="true">→</i>
+      <article><span class="mono">04</span><h3>Deliver</h3><p>Approved results enrich the agent’s context with provenance.</p></article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">Why the standard matters</p>
+        <h2>Combine meaning without making every system the same.</h2>
+      </div>
+      <div class="prose">
+        <p>Today, every data exchange starts by reconciling schemas, definitions, and bespoke integration logic. If providers describe data as recognizable activities, the requesting system can reason about comparable business events before it ever sees a result.</p>
+        <p>The value to a buyer is better context for a question. The value to a provider is a governed way to make useful data available. The shared layer is not a giant central table—it is the language used to discover and request what each warehouse can produce.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section native-section">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">Warehouse native</p>
+        <h2>Advertise the activities, not the raw warehouse.</h2>
+      </div>
+      <div class="prose">
+        <p>A provider that already maintains Activity Schema has a compact inventory of business events. That inventory can expose what is available while the underlying data stays in the provider’s warehouse.</p>
+        <p>A prompt can be planned against those activities, evaluated under the provider’s controls, and returned as an aggregate or other allowed output. This is governed enrichment—not an excuse to sell unrestricted rows.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section safeguard-section">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">What has to be true</p>
+        <h2>Trust is part of the protocol.</h2>
+        <p class="lede">The activity vocabulary makes exchange easier to describe. A credible system must also make control, safety, and accountability concrete.</p>
+      </div>
+      <div class="safeguards">
+        {safeguards.map(([title, description], index) => (
+          <article><span class="mono">0{index + 1}</span><div><h3>{title}</h3><p>{description}</p></div></article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section invitation-section">
+    <div class="shell invitation">
+      <p class="eyebrow">Help shape it</p>
+      <h2>Building something with activities?</h2>
+      <p class="lede">Share an implementation, tool, research project, or point of view. Ahmed would like to feature useful work and bring together people interested in a standard for agent-ready context.</p>
+      <div class="actions">
+        <a class="button button-primary" href="mailto:ahmed@polyform.ai?subject=Activity%20Schema%20project">Email Ahmed <span aria-hidden="true">↗</span></a>
+        <a class="button button-secondary" href="https://www.linkedin.com/in/elsamadisi/">Connect on LinkedIn <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .status { display: grid; grid-template-columns: auto minmax(0, 560px); align-items: center; gap: 16px; margin-top: 40px; }
+  .status span { padding: 7px 9px; border: 1px solid var(--orange); color: var(--orange); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .status p { margin: 0; color: var(--steel); font-size: 0.84rem; }
+  .flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; align-items: stretch; border-block: 1px solid var(--line); }
+  .flow article { min-height: 270px; padding: 24px; }
+  .flow article span { display: block; margin-bottom: 90px; color: var(--seafoam-dark); font-size: 0.68rem; }
+  .flow article p { margin: 0; color: var(--steel); font-size: 0.86rem; }
+  .flow i { align-self: center; color: var(--fog); font-style: normal; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(48px, 8vw, 100px); }
+  .native-section { background: var(--white); }
+  .safeguard-section { background: var(--midnight); }
+  .safeguard-section h2, .safeguard-section .eyebrow { color: var(--white); }
+  .safeguard-section .lede { color: rgba(255, 255, 255, 0.62); }
+  .safeguards { border-top: 1px solid rgba(255, 255, 255, 0.16); }
+  .safeguards article { display: grid; grid-template-columns: 34px 1fr; gap: 16px; padding-block: 22px; border-bottom: 1px solid rgba(255, 255, 255, 0.16); }
+  .safeguards span { color: var(--seafoam); font-size: 0.65rem; }
+  .safeguards h3 { color: var(--white); }
+  .safeguards p { margin: 0; color: rgba(255, 255, 255, 0.62); }
+  .invitation-section { background: var(--white); }
+  .invitation { max-width: 900px; margin-left: max(20px, calc((100vw - var(--max-width)) / 2)); }
+  @media (max-width: 900px) {
+    .flow { grid-template-columns: 1fr 1fr; }
+    .flow i { display: none; }
+    .flow article { min-height: 230px; border-bottom: 1px solid var(--line); }
+    .split { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .status, .flow { grid-template-columns: 1fr; }
+    .status span { width: fit-content; }
+    .flow article { min-height: auto; }
+    .flow article span { margin-bottom: 44px; }
+  }
+</style>

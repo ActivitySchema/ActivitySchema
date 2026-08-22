@@ -15,9 +15,9 @@
   --seafoam-light: #94efb7;
   --sky: #88deeb;
   --max-width: 1200px;
-  --radius: 8px;
-  --shadow-card: 0 1px 4px rgba(18, 22, 30, 0.024), 0 1px 0 rgba(18, 22, 30, 0.05), 0 0 0 1px rgba(18, 22, 30, 0.024);
-  --shadow-float: 0 40px 32px rgba(0, 0, 0, 0.02), 0 22px 18px rgba(0, 0, 0, 0.03), 0 12px 10px rgba(0, 0, 0, 0.03), 0 7px 5px rgba(0, 0, 0, 0.04), 0 3px 2px rgba(0, 0, 0, 0.07);
+  --radius: 2px;
+  --shadow-card: none;
+  --shadow-float: none;
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
   background: var(--canvas);
@@ -35,9 +35,7 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  background:
-    radial-gradient(circle at 86% 1%, rgba(136, 222, 235, 0.24), transparent 24rem),
-    var(--canvas);
+  background: var(--canvas);
   color: var(--ink);
   font-size: 16px;
   line-height: 1.5;
@@ -150,9 +148,8 @@ code {
 }
 
 .eyebrow::before {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
+  width: 14px;
+  height: 2px;
   background: var(--seafoam);
   content: "";
 }
@@ -188,17 +185,16 @@ code {
   font-weight: 600;
   line-height: 1;
   text-decoration: none;
-  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+  transition: color 160ms ease, background 160ms ease;
 }
 
 .button:hover {
-  transform: translateY(-2px);
   text-decoration: none;
 }
 
 .button-primary {
   background: var(--navy);
-  box-shadow: 0 1px 3px rgba(17, 26, 74, 0.1), inset 0 1px rgba(255, 255, 255, 0.5);
+  box-shadow: none;
   color: var(--white);
 }
 

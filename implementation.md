@@ -43,7 +43,7 @@ Creating a single table per stream can help with performance, but it won't matte
 <br>
 
 
-### Partioning / Clustering
+### Partitioning / Clustering
 
 Most of the complexity is around how to sort / partition for best query performance. In general queries to an activity schema will filter or group by activity and time, so it's best to align around those.
 
@@ -104,6 +104,21 @@ One table per activity|activity_occurrence INT, DATE(ts) DATE
 <br>
 <br>
 
+### Activity Streams and Dimensions
+
+Activity Schema is the primary modeled layer for business events, but it does not prohibit dimensions or ordinary joins. The [2.0 specification](2.0.md#dimensional-modeling) allows queries to join activities to useful reference data such as a SKU catalog, a current customer record, geography, or an identity map.
+
+A practical boundary is:
+
+- keep **what happened, who it happened to, when it happened, and event-specific features** in the activity stream
+- keep **stable, reusable reference attributes** in dimensions
+- join dimensions when a query needs them, without placing a chain of intermediate models between the stream and its consumers
+- derive temporal conclusions such as `first_utm_source`, `last_plan_before_churn`, or `acquired_at` from activities rather than copying them into dimensions
+
+If a value depends on which event happened first, last, before, after, or in between another event, it generally belongs in a query over the activity stream. This preserves the original history and avoids maintaining a second, potentially conflicting definition in a dimension.
+
+<br>
+
 
 
 ## Tools for Processing
@@ -158,7 +173,7 @@ It provides
 
 ### Incremental Updates
 
-The Activity Schema was designed around incremental updaets. For large data this saves a significant amount of time and cost and is the preferred way to manage an activity stream in production.
+The Activity Schema was designed around incremental updates. For large data this can save a significant amount of time and cost and is the preferred way to manage an activity stream in production.
 
 In theory incremental updates are straightforward. Each activity in an Activity Schema data model is immutable, so appending data to the stream tables should be sufficient to keep the activity stream in good shape.
 
@@ -221,4 +236,3 @@ where c.activity = 'updated_subscription'
 ```
 
 Since these two expressions each return only one row per customer, they're also a very efficient way to get every unique customer that has done an activity. 
-
